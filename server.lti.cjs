@@ -38,8 +38,19 @@ console.log('BASE_URL:', process.env.BASE_URL);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('=== END DEBUG ===');
 
-// Initialize LTI Provider
-const provider = LTI.Provider.setup(process.env.LTI_DATABASE_URL || 'memory', ltiConfig);
+// Initialize LTI Provider - with try-catch for detailed error
+let provider;
+try {
+  provider = LTI.Provider.setup(process.env.LTI_DATABASE_URL || 'memory', ltiConfig);
+  console.log('✅ LTI Provider initialized successfully');
+} catch (error) {
+  console.error('❌ LTI Provider initialization failed:', error.message);
+  console.error('Full error:', error);
+  throw error;
+}
+
+// Export the provider for use in server.refactored.cjs
+module.exports = { lti: provider };
 
 // Setup LTI Provider with configuration
 provider.setup(process.env.LTI_CLIENT_ID, {
