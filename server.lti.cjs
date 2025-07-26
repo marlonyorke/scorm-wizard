@@ -48,23 +48,28 @@ console.log('Database Config Object:', JSON.stringify({
 }, null, 2));
 console.log('=== END DATABASE DEBUG ===');
 
-// Initialize LTI Provider - with proper database config
+// Initialize LTI Provider - with complete database config
 let provider;
 try {
+  // ltijs expects a complete database config object
   const dbConfig = {
     url: process.env.LTI_DATABASE_URL || 'memory',
-    type: 'sqlite'
+    type: 'sqlite',
+    database: process.env.LTI_DATABASE_URL || 'memory',
+    storage: process.env.LTI_DATABASE_URL || 'memory'
   };
-  console.log('Attempting LTI Provider setup with:', JSON.stringify(dbConfig, null, 2));
+  
+  console.log('Attempting LTI Provider setup with complete config:', JSON.stringify(dbConfig, null, 2));
   provider = LTI.Provider.setup(dbConfig, ltiConfig);
   console.log('✅ LTI Provider initialized successfully');
 } catch (error) {
   console.error('❌ LTI Provider initialization failed:', error.message);
   console.error('Error stack:', error.stack);
-  console.error('Expected database config format:', {
-    url: 'string',
-    type: 'sqlite|mysql|postgres',
-    // Add any other required fields
+  console.error('Correct database config format for ltijs:', {
+    url: 'file:/tmp/lti.sqlite',
+    type: 'sqlite',
+    database: 'lti',
+    storage: 'file:/tmp/lti.sqlite'
   });
   throw error;
 }
