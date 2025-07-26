@@ -29,6 +29,15 @@ const ltiConfig = {
   devMode: process.env.NODE_ENV === 'development'
 };
 
+// Debug: Alle relevante environment variables
+console.log('=== LTI DEBUG INFO ===');
+console.log('LTI_DATABASE_URL:', process.env.LTI_DATABASE_URL);
+console.log('LTI_CLIENT_ID:', process.env.LTI_CLIENT_ID);
+console.log('MOODLE_URL:', process.env.MOODLE_URL);
+console.log('BASE_URL:', process.env.BASE_URL);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('=== END DEBUG ===');
+
 // Initialize LTI Provider
 const provider = LTI.Provider.setup(process.env.LTI_DATABASE_URL || 'memory', ltiConfig);
 
