@@ -48,6 +48,13 @@ console.log('Database Config Object:', JSON.stringify({
 }, null, 2));
 console.log('=== END DATABASE DEBUG ===');
 
+// If provider was already initialized in another require, reuse and exit early
+if (global.__ltiProvider) {
+  module.exports = { lti: global.__ltiProvider };
+  console.log('ℹ️ LTI Provider already initialized earlier – reusing instance.');
+  return;
+}
+
 // DEBUG PATCH: Trace ltijs Database class constructor
 const originalDatabaseConstructor = require('ltijs/dist/Utils/Database').default;
 const patchedDatabaseConstructor = function(config) {
