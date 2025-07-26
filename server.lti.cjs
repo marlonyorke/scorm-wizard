@@ -30,7 +30,7 @@ const ltiConfig = {
 };
 
 // Initialize LTI Provider
-const provider = LTI.Provider.setup('memory', ltiConfig);
+const provider = LTI.Provider.setup(process.env.LTI_DATABASE_URL || 'memory', ltiConfig);
 
 // Setup LTI Provider with configuration
 provider.setup(process.env.LTI_CLIENT_ID, {
