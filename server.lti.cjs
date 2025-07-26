@@ -71,12 +71,19 @@ try {
   const dbConfig = {
     url: process.env.LTI_DATABASE_URL || 'memory'
   };
-  
-  console.log('Attempting LTI Provider setup with documented config:', JSON.stringify(dbConfig, null, 2));
-  // ltijs expects arguments: encryptionKey, databaseConfig, options
-  const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
-  provider = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
-  console.log('✅ LTI Provider initialized successfully');
+
+  // Re-use existing provider if it was already created elsewhere
+  if (global.__ltiProvider) {
+    console.log('ℹ️ Reusing existing LTI Provider instance');
+    provider = global.__ltiProvider;
+  } else {
+    console.log('Attempting LTI Provider setup with documented config:', JSON.stringify(dbConfig, null, 2));
+    // ltijs expects arguments: encryptionKey, databaseConfig, options
+    const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
+    provider = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
+    console.log('✅ LTI Provider initialized successfully');
+    global.__ltiProvider = provider; // cache for subsequent requires
+  }
 } catch (error) {
   console.error('❌ LTI Provider initialization failed:', error.message);
   console.error('Error stack:', error.stack);
