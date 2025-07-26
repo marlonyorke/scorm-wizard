@@ -73,7 +73,9 @@ try {
   };
   
   console.log('Attempting LTI Provider setup with documented config:', JSON.stringify(dbConfig, null, 2));
-  provider = LTI.Provider.setup(dbConfig, ltiConfig);
+  // ltijs expects arguments: encryptionKey, databaseConfig, options
+  const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
+  provider = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
   console.log('✅ LTI Provider initialized successfully');
 } catch (error) {
   console.error('❌ LTI Provider initialization failed:', error.message);
