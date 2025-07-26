@@ -8,7 +8,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-const { Provider } = require('ltijs');
+const LTI = require('ltijs');
 require('dotenv').config();
 
 // Gebruik een simpele logger om ES module conflict te vermijden
@@ -30,10 +30,10 @@ const ltiConfig = {
 };
 
 // Initialize LTI Provider
-const lti = new Provider('memory', ltiConfig);
+const provider = LTI.Provider.setup('memory', ltiConfig);
 
 // Setup LTI Provider with configuration
-lti.setup(process.env.LTI_CLIENT_ID, {
+provider.setup(process.env.LTI_CLIENT_ID, {
   url: process.env.MOODLE_URL || 'https://localhost',
   name: 'SCORM Wizard',
   description: 'Interactive SCORM package creation tool',
