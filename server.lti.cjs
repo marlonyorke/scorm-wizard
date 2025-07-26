@@ -38,14 +38,34 @@ console.log('BASE_URL:', process.env.BASE_URL);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('=== END DEBUG ===');
 
-// Initialize LTI Provider - with try-catch for detailed error
+// Debug: Database configuration details
+console.log('=== LTI DATABASE DEBUG ===');
+console.log('Database URL:', process.env.LTI_DATABASE_URL);
+console.log('Database Type:', 'sqlite');
+console.log('Database Config Object:', JSON.stringify({
+  url: process.env.LTI_DATABASE_URL || 'memory',
+  type: 'sqlite'
+}, null, 2));
+console.log('=== END DATABASE DEBUG ===');
+
+// Initialize LTI Provider - with proper database config
 let provider;
 try {
-  provider = LTI.Provider.setup(process.env.LTI_DATABASE_URL || 'memory', ltiConfig);
+  const dbConfig = {
+    url: process.env.LTI_DATABASE_URL || 'memory',
+    type: 'sqlite'
+  };
+  console.log('Attempting LTI Provider setup with:', JSON.stringify(dbConfig, null, 2));
+  provider = LTI.Provider.setup(dbConfig, ltiConfig);
   console.log('✅ LTI Provider initialized successfully');
 } catch (error) {
   console.error('❌ LTI Provider initialization failed:', error.message);
-  console.error('Full error:', error);
+  console.error('Error stack:', error.stack);
+  console.error('Expected database config format:', {
+    url: 'string',
+    type: 'sqlite|mysql|postgres',
+    // Add any other required fields
+  });
   throw error;
 }
 
