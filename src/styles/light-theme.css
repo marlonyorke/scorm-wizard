@@ -1,0 +1,236 @@
+/* Light Theme - Complementary to Futuristic Theme */
+
+/* Base Layout */
+.theme-light body {
+  background-image: 
+    linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L0 0 0 40' fill='none' stroke='%23dee2e6' stroke-width='0.5' stroke-opacity='0.3'/%3E%3C/svg%3E");
+  background-size: cover, 40px 40px;
+  color: #212529;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Header Styling */
+.theme-light .header-bar {
+  background-color: #ffffff;
+  opacity: 0.95;
+  border-left: 6px solid #4361ee;
+  padding: 1rem;
+}
+
+/* Card Styling */
+.theme-light .glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(249, 250, 251, 0.8) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(222, 226, 230, 0.5);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Section Headers */
+.theme-light .section-header {
+  color: #495057;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Input Styling */
+.theme-light input, 
+.theme-light textarea, 
+.theme-light select, 
+.theme-light .input-field {
+  background: linear-gradient(90deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  color: #212529;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  appearance: none;
+}
+
+.theme-light input:focus, 
+.theme-light textarea:focus, 
+.theme-light select:focus, 
+.theme-light .input-field:focus {
+  border-color: #4361ee;
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+  outline: none;
+}
+
+.theme-light input::placeholder, 
+.theme-light textarea::placeholder {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+/* Button Styling */
+.theme-light .btn-primary {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-light .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(67, 97, 238, 0.4);
+}
+
+.theme-light .btn-primary::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+.theme-light .btn-highlight {
+  background: linear-gradient(135deg, #4cc9f0 0%, #4895ef 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.theme-light .btn-highlight:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(76, 201, 240, 0.4);
+}
+
+.theme-light .btn-secondary {
+  background-color: rgba(233, 236, 239, 0.8);
+  border: 1px solid #ced4da;
+  color: #495057;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.theme-light .btn-secondary:hover {
+  background-color: rgba(222, 226, 230, 0.9);
+  box-shadow: 0 0 10px rgba(206, 212, 218, 0.5);
+}
+
+/* Icon Buttons */
+.theme-light .icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(233, 236, 239, 0.8);
+  border: 1px solid #ced4da;
+  color: #4361ee;
+  transition: all 0.3s ease;
+}
+
+.theme-light .icon-btn:hover {
+  background-color: rgba(222, 226, 230, 0.9);
+  box-shadow: 0 0 10px rgba(67, 97, 238, 0.3);
+}
+
+/* Sliders */
+.theme-light input[type="range"] {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(222, 226, 230, 0.8);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.theme-light input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #4361ee;
+  box-shadow: 0 0 10px rgba(67, 97, 238, 0.3);
+  cursor: pointer;
+}
+
+/* Dropdown Styling */
+.theme-light select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234361ee' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Marked Words Styling */
+.theme-light .marked-word {
+  color: #4361ee;
+  font-weight: bold;
+  position: relative;
+}
+
+/* Utility Classes */
+.theme-light .text-highlight {
+  color: #4361ee;
+}
+
+.theme-light .text-primary-accent {
+  color: #3a0ca3;
+}
+
+.theme-light .text-secondary-accent {
+  color: #4cc9f0;
+}
+
+.theme-light .text-muted {
+  color: #6c757d;
+}
+
+.theme-light .border-highlight {
+  border-color: #4361ee;
+}
+
+.theme-light .bg-card {
+  background-color: #ffffff;
+}
+
+.theme-light .bg-input {
+  background-color: #f8f9fa;
+}
+
+/* Grid Pattern Background */
+.theme-light .grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(222, 226, 230, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(222, 226, 230, 0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
+}

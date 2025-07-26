@@ -1,0 +1,1065 @@
+/* Futuristic Theme - Based on SVG mockup */
+
+/* Base Layout */
+.theme-futuristic body {
+  background-image: 
+    linear-gradient(135deg, #0c0032 0%, #190061 100%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L0 0 0 40' fill='none' stroke='%233500d3' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C/svg%3E");
+  background-size: cover, 40px 40px;
+  color: #ffffff;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Add glowing orbs as in the mockup */
+.theme-futuristic body::before,
+.theme-futuristic body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: -1;
+}
+
+.theme-futuristic body::before {
+  top: 15%;
+  left: 15%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(157, 78, 221, 0.3) 0%, rgba(157, 78, 221, 0) 70%);
+}
+
+.theme-futuristic body::after {
+  bottom: 25%;
+  right: 15%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(0, 242, 255, 0.2) 0%, rgba(0, 242, 255, 0) 70%);
+}
+
+/* Add decorative elements */
+.theme-futuristic .decorative-orb {
+  position: fixed;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.theme-futuristic .decorative-orb.cyan {
+  background-color: #00f2ff;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+}
+
+.theme-futuristic .decorative-orb.purple {
+  background-color: #7b2ff7;
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.8);
+}
+
+/* Header Styling */
+.theme-futuristic .header-bar {
+  background-color: #12102e;
+  opacity: 0.7;
+  border-left: 6px solid #00f2ff;
+  padding: 1rem;
+}
+
+/* Card Styling */
+.theme-futuristic .glass-card {
+  background: linear-gradient(135deg, rgba(36, 0, 144, 0.15) 0%, rgba(53, 0, 211, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border: 1px solid rgba(123, 47, 247, 0.1);
+}
+
+.theme-futuristic .card {
+  background-color: #1c1b33;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  border: 1px solid rgba(123, 47, 247, 0.1);
+}
+
+/* Section Headers */
+.theme-futuristic .section-header {
+  color: #c8c6e7;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Input Styling */
+.theme-futuristic input, 
+.theme-futuristic textarea, 
+.theme-futuristic select, 
+.theme-futuristic .input-field {
+  background: linear-gradient(90deg, #282846 0%, #1f1f35 100%);
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  appearance: none;
+}
+
+.theme-futuristic input:focus, 
+.theme-futuristic textarea:focus, 
+.theme-futuristic select:focus, 
+.theme-futuristic .input-field:focus {
+  border-color: #7b2ff7;
+  box-shadow: 0 0 0 2px rgba(123, 47, 247, 0.2);
+  outline: none;
+}
+
+.theme-futuristic input::placeholder, 
+.theme-futuristic textarea::placeholder {
+  color: #6c63a9;
+  font-style: italic;
+}
+
+/* Button Styling */
+.theme-futuristic .btn-primary {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-futuristic .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.5);
+}
+
+.theme-futuristic .btn-primary::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+.theme-futuristic .btn-highlight {
+  background: linear-gradient(135deg, #00f2ff 0%, #01bfcc 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.theme-futuristic .btn-highlight:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+}
+
+.theme-futuristic .btn-secondary {
+  background-color: rgba(36, 0, 144, 0.3);
+  border: 1px solid rgba(123, 47, 247, 0.5);
+  color: #c8c6e7;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.theme-futuristic .btn-secondary:hover {
+  background-color: rgba(36, 0, 144, 0.5);
+  box-shadow: 0 0 10px rgba(123, 47, 247, 0.3);
+}
+
+/* Icon Buttons */
+.theme-futuristic .icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(36, 0, 144, 0.3);
+  border: 1px solid rgba(0, 242, 255, 0.5);
+  color: #00f2ff;
+  transition: all 0.3s ease;
+}
+
+.theme-futuristic .icon-btn:hover {
+  background-color: rgba(36, 0, 144, 0.5);
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+}
+
+/* Sliders */
+.theme-futuristic input[type="range"] {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(36, 0, 144, 0.3);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.theme-futuristic input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #240090;
+  border: 2px solid #00f2ff;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+  cursor: pointer;
+}
+
+/* Dropdown Styling */
+.theme-futuristic select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300f2ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
+}
+
+/* Marked Words Styling */
+.theme-futuristic .marked-word {
+  color: #00f2ff;
+  font-weight: bold;
+  position: relative;
+}
+
+/* Utility Classes */
+.theme-futuristic .text-highlight {
+  color: #00f2ff;
+}
+
+.theme-futuristic .text-primary-accent {
+  color: #7b2ff7;
+}
+
+.theme-futuristic .text-secondary-accent {
+  color: #00f2ff;
+}
+
+.theme-futuristic .text-muted {
+  color: #6c63a9;
+}
+
+.theme-futuristic .border-highlight {
+  border-color: #00f2ff;
+}
+
+.theme-futuristic .bg-card {
+  background-color: #1c1b33;
+}
+
+.theme-futuristic .bg-input {
+  background-color: #282846;
+}
+
+/* Animations */
+@keyframes shine {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  20% {
+    left: 100%;
+    opacity: 0.3;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes neon-pulse {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+  }
+}
+
+/* Header styles */
+.theme-futuristic .app-header {
+  background-color: #12102e;
+  opacity: 0.7;
+  border-left: 6px solid #00f2ff;
+}
+
+/* Main container styles */
+.theme-futuristic .main-container {
+  background-color: #12102e;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Title section styles */
+.theme-futuristic .title-section {
+  background: linear-gradient(90deg, #240090 0%, #3500d3 100%);
+  border-radius: 20px 20px 0 0;
+  padding: 1rem;
+}
+
+/* Form section styles */
+.theme-futuristic .form-section {
+  padding: 1rem;
+}
+
+/* Form group styles */
+.theme-futuristic .form-group {
+  background-color: #1c1b33;
+  border-radius: 15px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Form label styles */
+.theme-futuristic .form-label {
+  color: #c8c6e7;
+  font-weight: 500;
+}
+
+/* Form input styles */
+.theme-futuristic .form-input {
+  background: linear-gradient(90deg, #282846 0%, #1f1f35 100%);
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+/* Button styles */
+.theme-futuristic .button-primary {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+}
+
+.theme-futuristic .button-secondary {
+  background-color: rgba(36, 0, 144, 0.3);
+  border: 1px solid rgba(123, 47, 247, 0.5);
+  color: #c8c6e7;
+  font-weight: bold;
+  border-radius: 12px;
+}
+
+.theme-futuristic .button-highlight {
+  background: linear-gradient(135deg, #00f2ff 0%, #01bfcc 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+}
+
+/* Dropdown styles */
+.theme-futuristic .dropdown {
+  background: linear-gradient(90deg, #282846 0%, #1f1f35 100%);
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+/* Slider styles */
+.theme-futuristic .slider-track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(36, 0, 144, 0.3);
+}
+
+.theme-futuristic .slider-track-highlight {
+  background: #00f2ff;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+}
+
+.theme-futuristic .slider-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #240090;
+  border: 2px solid #00f2ff;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+
+/* Specific component styles to match the mockup */
+.theme-futuristic .question-editor {
+  background-color: #12102e;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.theme-futuristic .question-type-header {
+  background: linear-gradient(90deg, #240090 0%, #3500d3 100%);
+  border-radius: 20px 20px 0 0;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.theme-futuristic .question-type-header h2 {
+  color: #ffffff;
+  font-weight: 700;
+  margin-left: 1rem;
+}
+
+.theme-futuristic .question-form-group {
+  background-color: #1c1b33;
+  border-radius: 15px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.theme-futuristic .question-form-label {
+  color: #c8c6e7;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.theme-futuristic .question-form-input {
+  background: linear-gradient(90deg, #282846 0%, #1f1f35 100%);
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+}
+
+.theme-futuristic .question-form-input::placeholder {
+  color: #6c63a9;
+  font-style: italic;
+}
+
+.theme-futuristic .question-generate-button {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.5);
+}
+
+.theme-futuristic .question-save-button {
+  background: linear-gradient(135deg, #00f2ff 0%, #01bfcc 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+}
+
+/* Add neon glow to specific elements */
+.theme-futuristic .neon-glow {
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+}
+
+.theme-futuristic .neon-glow-purple {
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.5);
+}
+
+/* Add specific styles for dropdown elements to match the mockup */
+.theme-futuristic .dropdown-select {
+  background: linear-gradient(90deg, #282846 0%, #1f1f35 100%);
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  appearance: none;
+}
+
+.theme-futuristic .dropdown-icon {
+  color: #00f2ff;
+  background-color: rgba(36, 0, 144, 0.3);
+  border: 1px solid rgba(123, 47, 247, 0.5);
+  border-radius: 50%;
+  padding: 0.25rem;
+}
+
+/* Add styles for the marked words in the text */
+.theme-futuristic .marked-word {
+  color: #00f2ff;
+  font-weight: bold;
+}
+
+/* Add styles for the slider in the mockup */
+.theme-futuristic .word-count-slider {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.theme-futuristic .word-count-slider-track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(36, 0, 144, 0.3);
+}
+
+.theme-futuristic .word-count-slider-track-highlight {
+  background: #00f2ff;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+}
+
+.theme-futuristic .word-count-slider-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #240090;
+  border: 2px solid #00f2ff;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+
+/* Add styles for the image upload button */
+.theme-futuristic .image-upload-button {
+  background-color: rgba(36, 0, 144, 0.3);
+  border: 1px solid rgba(53, 0, 211, 0.5);
+  border-radius: 10px;
+  color: #00f2ff;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.theme-futuristic .image-upload-icon {
+  color: #00f2ff;
+  margin-right: 0.5rem;
+}
+
+/* Add styles for the AI generate button */
+.theme-futuristic .ai-generate-button {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.5);
+}
+
+/* Question Type Selection Screen Specific Styles */
+.theme-futuristic .min-h-screen {
+  background-image: 
+    linear-gradient(135deg, #0c0032 0%, #190061 100%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L0 0 0 40' fill='none' stroke='%233500d3' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C/svg%3E");
+  background-size: cover, 40px 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.theme-futuristic .min-h-screen::before,
+.theme-futuristic .min-h-screen::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: 0;
+}
+
+.theme-futuristic .min-h-screen::before {
+  top: 15%;
+  left: 15%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(157, 78, 221, 0.3) 0%, rgba(157, 78, 221, 0) 70%);
+}
+
+.theme-futuristic .min-h-screen::after {
+  bottom: 25%;
+  right: 15%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(0, 242, 255, 0.2) 0%, rgba(0, 242, 255, 0) 70%);
+}
+
+/* Question Type Card Styling */
+.theme-futuristic .bg-secondary-bg {
+  background: linear-gradient(135deg, rgba(36, 0, 144, 0.15) 0%, rgba(53, 0, 211, 0.05) 100%) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(53, 0, 211, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.theme-futuristic .bg-secondary-bg:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  border-color: rgba(0, 242, 255, 0.3);
+}
+
+.theme-futuristic .ring-primary-accent {
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+  border-color: #00f2ff !important;
+}
+
+/* Button Styling for Question Type Selection */
+.theme-futuristic .bg-primary-accent {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%) !important;
+  color: white !important;
+  font-weight: bold;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-futuristic .bg-primary-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.5);
+}
+
+.theme-futuristic .bg-primary-accent::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+.theme-futuristic .border-primary-accent {
+  border-color: #7b2ff7 !important;
+}
+
+.theme-futuristic .text-primary-accent {
+  color: #7b2ff7 !important;
+}
+
+.theme-futuristic .text-highlight,
+.theme-futuristic .text-secondary-accent {
+  color: #00f2ff !important;
+}
+
+/* Badge Styling */
+.theme-futuristic .bg-gradient-to-r {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%) !important;
+  color: white !important;
+  box-shadow: 0 0 10px rgba(123, 47, 247, 0.5);
+}
+
+/* Title Styling */
+.theme-futuristic h1.text-3xl {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.theme-futuristic .text-secondary-text {
+  color: #c8c6e7 !important;
+}
+
+.theme-futuristic .text-primary-text {
+  color: #ffffff !important;
+}
+
+/* Editor Styling for Futuristic Theme */
+.theme-futuristic .editor-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0c0032 0%, #190061 100%);
+  background-image: 
+    linear-gradient(135deg, #0c0032 0%, #190061 100%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L0 0 0 40' fill='none' stroke='%233500d3' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C/svg%3E");
+  background-size: cover, 40px 40px;
+  position: relative;
+}
+
+.theme-futuristic .editor-header {
+  background-color: #12102e;
+  opacity: 0.7;
+  border-left: 6px solid #00f2ff;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-futuristic .editor-form-container {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.theme-futuristic .question-type-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.theme-futuristic .form-group {
+  background-color: #12102e;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  background: linear-gradient(135deg, rgba(36, 0, 144, 0.15) 0%, rgba(53, 0, 211, 0.05) 100%);
+  border: 1px solid rgba(123, 47, 247, 0.1);
+}
+
+.theme-futuristic .form-label {
+  color: #c8c6e7;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.theme-futuristic .form-control {
+  background: linear-gradient(90deg, #282846 0%, #1f1f35 100%);
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.theme-futuristic .form-control:focus {
+  border-color: #00f2ff;
+  box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.2);
+  outline: none;
+}
+
+.theme-futuristic .form-control::placeholder {
+  color: #6c63a9;
+  font-style: italic;
+}
+
+.theme-futuristic .form-dropdown {
+  background-color: #1c1b33;
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+.theme-futuristic .primary-button {
+  background: linear-gradient(135deg, #00f2ff 0%, #01bfcc 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.theme-futuristic .primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+}
+
+.theme-futuristic .action-button {
+  background: #240090;
+  border: 1px solid #7b2ff7;
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.theme-futuristic .action-button:hover {
+  background-color: #3500d3;
+  box-shadow: 0 0 10px rgba(123, 47, 247, 0.3);
+}
+
+.theme-futuristic .ai-generate-button {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.theme-futuristic .ai-generate-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.5);
+}
+
+.theme-futuristic .image-upload-button {
+  background-color: #240090;
+  border: 1px solid #00f2ff;
+  color: #00f2ff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.theme-futuristic .image-upload-button:hover {
+  background-color: rgba(0, 242, 255, 0.2);
+}
+
+.theme-futuristic .check-answer-button {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+/* Preview Section */
+.theme-futuristic .preview-section {
+  background-color: #12102e;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.theme-futuristic .preview-content {
+  background-color: #1c1b33;
+  border-radius: 15px;
+  padding: 1.5rem;
+  position: relative;
+}
+
+/* Marked Words */
+.theme-futuristic .marked-word {
+  color: #00f2ff;
+  font-weight: bold;
+  position: relative;
+}
+
+/* Add specific styles for the Quiz Editor */
+.theme-futuristic .quiz-editor {
+  background: linear-gradient(135deg, rgba(36, 0, 144, 0.15) 0%, rgba(53, 0, 211, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(123, 47, 247, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 0;
+  overflow: hidden;
+}
+
+.theme-futuristic .quiz-editor-header {
+  background: linear-gradient(90deg, #240090 0%, #3500d3 100%);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-futuristic .quiz-editor-header h1,
+.theme-futuristic .quiz-editor-header h2 {
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0;
+}
+
+.theme-futuristic .quiz-editor-content {
+  padding: 1.5rem;
+}
+
+/* Multiple Choice Editor Specific Styles */
+.theme-futuristic .multiple-choice-editor {
+  background: linear-gradient(135deg, rgba(36, 0, 144, 0.15) 0%, rgba(53, 0, 211, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(123, 47, 247, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.theme-futuristic .multiple-choice-editor-header {
+  background: linear-gradient(90deg, #240090 0%, #3500d3 100%);
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-futuristic .multiple-choice-editor-header h2 {
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0;
+}
+
+.theme-futuristic .multiple-choice-option {
+  background: linear-gradient(90deg, #282846 0%, #1f1f35 100%);
+  border: 1px solid rgba(53, 0, 211, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-futuristic .multiple-choice-option:hover {
+  border-color: #00f2ff;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+}
+
+.theme-futuristic .multiple-choice-option-correct {
+  border-color: #00f2ff;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+}
+
+/* Specific styling for the Mark the Words editor */
+.theme-futuristic .mark-words-editor {
+  background: linear-gradient(135deg, rgba(36, 0, 144, 0.15) 0%, rgba(53, 0, 211, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(123, 47, 247, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.theme-futuristic .mark-words-editor-header {
+  background: linear-gradient(90deg, #240090 0%, #3500d3 100%);
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.theme-futuristic .mark-words-editor-header h2 {
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0;
+  margin-left: 1rem;
+}
+
+.theme-futuristic .mark-words-editor-header .icon {
+  color: #00f2ff;
+  background: rgba(0, 242, 255, 0.1);
+  border-radius: 50%;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+}
+
+/* Specific styling for the editor pages */
+.theme-futuristic .editor-page {
+  background-image: 
+    linear-gradient(135deg, #0c0032 0%, #190061 100%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L0 0 0 40' fill='none' stroke='%233500d3' stroke-width='0.5' stroke-opacity='0.2'/%3E%3C/svg%3E");
+  background-size: cover, 40px 40px;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+/* Preview Section */
+.theme-futuristic .preview-section {
+  background: linear-gradient(135deg, rgba(36, 0, 144, 0.2) 0%, rgba(53, 0, 211, 0.1) 100%);
+  backdrop-filter: blur(5px);
+  border-radius: 20px;
+  border: 1px solid rgba(123, 47, 247, 0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.theme-futuristic .preview-content {
+  background-color: rgba(28, 27, 51, 0.6);
+  border-radius: 15px;
+  padding: 1.25rem;
+  border: 1px solid rgba(123, 47, 247, 0.15);
+}
+
+/* Check Answer Button */
+.theme-futuristic .check-answer-button {
+  background: linear-gradient(135deg, #7b2ff7 0%, #3500d3 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.4);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.theme-futuristic .check-answer-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(123, 47, 247, 0.6);
+}

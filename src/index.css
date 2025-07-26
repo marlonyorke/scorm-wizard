@@ -1,0 +1,151 @@
+@import './styles/themes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 60 30% 96%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 60 30% 96%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 60 30% 96%;
+
+    --primary: 45 100% 50%;
+    --primary-foreground: 0 0% 4%;
+
+    --secondary: 45 100% 84%;
+    --secondary-foreground: 0 0% 4%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 60 30% 76%;
+
+    --accent: 45 100% 50%;
+    --accent-foreground: 0 0% 4%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 30% 96%;
+
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
+    --ring: 45 100% 50%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html, body {
+    @apply bg-background text-foreground;
+    background-color: var(--primary-bg) !important;
+    color: var(--primary-text) !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-lg border shadow-xl;
+    background-color: var(--secondary-bg) !important;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .gold-gradient {
+    background: var(--accent-gradient) !important;
+  }
+
+  .gold-glow {
+    box-shadow: 0 0 15px var(--primary-accent) !important;
+  }
+}
+
+.modern-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary-accent) rgba(0, 0, 0, 0.2);
+}
+
+.modern-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-accent);
+  border-radius: 3px;
+}
+
+/* Shake animatie voor foutieve antwoorden */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Thema-specifieke aanpassingen */
+html.theme-cosmic button.gold-gradient,
+.theme-cosmic button.gold-gradient {
+  background: linear-gradient(135deg, #8A4FFF 0%, #4F8AFF 100%) !important;
+}
+
+html.theme-cyberpunk button.gold-gradient,
+.theme-cyberpunk button.gold-gradient {
+  background: linear-gradient(135deg, #B026FF 0%, #3D85FF 100%) !important;
+  box-shadow: 0 0 8px #B026FF !important;
+}
+
+html.theme-aurora button.gold-gradient,
+.theme-aurora button.gold-gradient {
+  background: linear-gradient(135deg, #7B68EE 0%, #64A8FF 100%) !important;
+}
+
+/* Animatie voor Aurora thema */
+html.theme-aurora .gold-gradient,
+.theme-aurora .gold-gradient {
+  background-size: 200% 200% !important;
+  animation: aurora 15s ease infinite !important;
+}
+
+@keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Debug hulpmiddel */
+.theme-debug {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 9999;
+}
