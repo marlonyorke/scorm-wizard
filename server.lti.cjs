@@ -48,28 +48,25 @@ console.log('Database Config Object:', JSON.stringify({
 }, null, 2));
 console.log('=== END DATABASE DEBUG ===');
 
-// Initialize LTI Provider - with complete database config
+// Initialize LTI Provider - with exact documented format
 let provider;
 try {
-  // ltijs expects a complete database config object
+  // ltijs expects only url and optional connection/debug/plugin fields
   const dbConfig = {
-    url: process.env.LTI_DATABASE_URL || 'memory',
-    type: 'sqlite',
-    database: process.env.LTI_DATABASE_URL || 'memory',
-    storage: process.env.LTI_DATABASE_URL || 'memory'
+    url: process.env.LTI_DATABASE_URL || 'memory'
   };
   
-  console.log('Attempting LTI Provider setup with complete config:', JSON.stringify(dbConfig, null, 2));
+  console.log('Attempting LTI Provider setup with documented config:', JSON.stringify(dbConfig, null, 2));
   provider = LTI.Provider.setup(dbConfig, ltiConfig);
   console.log('✅ LTI Provider initialized successfully');
 } catch (error) {
   console.error('❌ LTI Provider initialization failed:', error.message);
   console.error('Error stack:', error.stack);
-  console.error('Correct database config format for ltijs:', {
-    url: 'file:/tmp/lti.sqlite',
-    type: 'sqlite',
-    database: 'lti',
-    storage: 'file:/tmp/lti.sqlite'
+  console.error('Documented database config format:', {
+    url: 'database connection url',
+    connection: { /* optional MongoDB options */ },
+    debug: true/false,
+    plugin: 'optional plugin'
   });
   throw error;
 }
