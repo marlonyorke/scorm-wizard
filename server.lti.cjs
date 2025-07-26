@@ -48,6 +48,22 @@ console.log('Database Config Object:', JSON.stringify({
 }, null, 2));
 console.log('=== END DATABASE DEBUG ===');
 
+// DEBUG PATCH: Trace ltijs Database class constructor
+const originalDatabaseConstructor = require('ltijs/dist/Utils/Database').default;
+const patchedDatabaseConstructor = function(config) {
+  console.log('🔍 ltijs Database constructor called with config:', JSON.stringify(config, null, 2));
+  
+  // Check for required fields
+  if (!config || !config.url) {
+    console.error('❌ MISSING_DATABASE_CONFIG: No url provided');
+    throw new Error('MISSING_DATABASE_CONFIG');
+  }
+  
+  console.log('✅ Database config has url:', config.url);
+  return new originalDatabaseConstructor(config);
+};
+require('ltijs/dist/Utils/Database').default = patchedDatabaseConstructor;
+
 // Initialize LTI Provider - with exact documented format
 let provider;
 try {
