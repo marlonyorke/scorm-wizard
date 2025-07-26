@@ -103,8 +103,10 @@ try {
   throw error;
 }
 
+// Alias for convenience
+const lti = provider;
 // Export the provider for use in server.refactored.cjs
-module.exports = { lti: provider };
+module.exports = { lti };
 
 // (Optional) Register platform here if needed using provider.registerPlatform(...)
 // Duplicate static setup removed to avoid PROVIDER_ALREADY_SETUP error
