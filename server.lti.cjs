@@ -106,19 +106,8 @@ try {
 // Export the provider for use in server.refactored.cjs
 module.exports = { lti: provider };
 
-// Setup LTI Provider with configuration
-provider.setup(process.env.LTI_CLIENT_ID, {
-  url: process.env.MOODLE_URL || 'https://localhost',
-  name: 'SCORM Wizard',
-  description: 'Interactive SCORM package creation tool',
-  icon: '/assets/icon.png',
-  version: '1.0.0',
-  keyset: process.env.LTI_KEYSET_URL,
-  redirectUris: [
-    `${process.env.BASE_URL}/lti/launch`,
-    `${process.env.BASE_URL}/lti/auth`
-  ]
-});
+// (Optional) Register platform here if needed using provider.registerPlatform(...)
+// Duplicate static setup removed to avoid PROVIDER_ALREADY_SETUP error
 
 // LTI Launch Handler
 lti.onConnect((token, req, res) => {
