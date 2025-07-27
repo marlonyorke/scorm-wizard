@@ -37,6 +37,7 @@ console.log('=== END DEBUG ===');
 
 // Initialize Express app
 const app = express();
+app.set('trust proxy', 1);
 
 // Publieke health endpoint (altijd bereikbaar, ongeacht LTI status)
 app.get('/lti/health', (req, res) => {
