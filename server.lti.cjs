@@ -6,6 +6,7 @@
 const express = require('express');
 const LTI = require('ltijs');
 const helmet = require('helmet');
+const cors = require('cors');
 require('dotenv').config();
 
 const logger = {
@@ -58,12 +59,20 @@ if (!lti) {
 // Apply helmet middleware
 lti.app.use(helmet());
 
-// Verify and apply helmet
+// Verify and apply middleware
 if (typeof helmet === 'function') {
   lti.app.use(helmet());
   console.log('✅ Helmet middleware applied successfully');
 } else {
   console.warn('⚠️ Helmet is not a function, skipping security middleware');
+}
+
+// Apply CORS middleware
+if (typeof cors === 'function') {
+  lti.app.use(cors());
+  console.log('✅ CORS middleware applied successfully');
+} else {
+  console.warn('⚠️ CORS is not a function, skipping CORS middleware');
 }
 
 // Error handling (version-agnostic)
