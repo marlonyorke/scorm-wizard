@@ -35,89 +35,67 @@ console.log('BASE_URL:', process.env.BASE_URL);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('=== END DEBUG ===');
 
-// Singleton pattern - ensure single initialization
-let lti;
-if (!global.__ltiProvider) {
-  try {
-    const dbConfig = { url: process.env.LTI_DATABASE_URL || ':memory:' };
-    const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
-    global.__ltiProvider = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
-    console.log('✅ LTI Provider initialized successfully');
-    lti = global.__ltiProvider;
-  } catch (error) {
-    logger.error('LTI Provider initialization failed', { error: error.message });
-    throw error;
+// Initialize Express app
+const app = express();
+
+// Initialize LTI provider
+const dbConfig = { url: process.env.LTI_DATABASE_URL || ':memory:' };
+const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
+const lti = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
+
+// Apply middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      frameAncestors: ["'self'", process.env.MOODLE_URL || 'https://localhost']
+    }
   }
-} else {
-  console.log('ℹ️ Reusing existing LTI Provider instance');
-  lti = global.__ltiProvider;
-}
+}));
 
-if (!lti) {
-  throw new Error('LTI provider is not available');
-}
-
-// Apply helmet middleware
-lti.app.use(helmet());
-
-// Verify and apply middleware
-if (typeof helmet === 'function') {
-  lti.app.use(helmet());
-  console.log('✅ Helmet middleware applied successfully');
-} else {
-  console.warn('⚠️ Helmet is not a function, skipping security middleware');
-}
-
-// Apply CORS middleware
-if (typeof cors === 'function') {
-  lti.app.use(cors({
-    origin: [
-      process.env.MOODLE_URL || 'https://localhost',
-      process.env.FRONTEND_URL || 'http://localhost:8082'
-    ],
-    credentials: true
-  }));
-  console.log('✅ CORS middleware applied successfully');
-} else {
-  console.warn('⚠️ CORS is not a function, skipping CORS middleware');
-}
-
-// Apply rate limiting middleware
-if (typeof rateLimit === 'function') {
-  const ltiRateLimit = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-    message: 'Too many LTI requests from this IP',
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
-  lti.app.use('/lti', ltiRateLimit);
-  console.log('✅ Rate limiting middleware applied successfully');
-} else {
-  console.warn('⚠️ RateLimit is not a function, skipping rate limiting');
-}
-
-// Error handling (version-agnostic)
-const errorHandler = (req, res, error) => {
-  logger.error('LTI Error', { error: error.message, stack: error.stack });
-  let errorPage = '/lti-error';
-  if (error.message.includes('invalid')) {
-    errorPage += '?reason=invalid_launch';
-  } else if (error.message.includes('unauthorized')) {
-    errorPage += '?reason=unauthorized';
-  } else if (error.message.includes('expired')) {
-    errorPage += '?reason=expired_token';
-  } else {
-    errorPage += '?reason=generic_error';
-  }
-  res.redirect(errorPage);
+const corsOptions = {
+  origin: [
+    process.env.MOODLE_URL || 'https://localhost',
+    process.env.FRONTEND_URL || 'http://localhost:8082'
+  ],
+  credentials: true
 };
 
-if (typeof lti.onError === 'function') {
-  lti.onError(errorHandler);
-} else if (typeof lti.on === 'function') {
-  lti.on('error', errorHandler);
-}
+app.use(cors(corsOptions));
+
+const ltiRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many LTI requests from this IP',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/lti', ltiRateLimit);
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+  logger.error('LTI middleware error', {
+    error: error.message,
+    stack: error.stack,
+    url: req.url,
+    method: req.method
+  });
+  
+  if (req.path.startsWith('/lti')) {
+    res.status(500).json({
+      error: 'LTI processing failed',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  } else {
+    next(error);
+  }
+});
 
 // LTI Launch Handler
 lti.onConnect((token, req, res) => {
@@ -211,59 +189,6 @@ lti.app.get('/lti/config', (req, res) => {
       platform: process.env.MOODLE_URL
     }
   });
-});
-
-// Security middleware
-lti.app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"],
-      frameAncestors: ["'self'", process.env.MOODLE_URL || 'https://localhost']
-    }
-  }
-}));
-
-lti.app.use(cors({
-  origin: [
-    process.env.MOODLE_URL || 'https://localhost',
-    process.env.FRONTEND_URL || 'http://localhost:8082'
-  ],
-  credentials: true
-}));
-
-// Rate limiting for LTI endpoints
-const ltiRateLimit = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many LTI requests from this IP',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-lti.app.use('/lti', ltiRateLimit);
-
-// Error handling middleware
-lti.app.use((error, req, res, next) => {
-  logger.error('LTI middleware error', {
-    error: error.message,
-    stack: error.stack,
-    url: req.url,
-    method: req.method
-  });
-  
-  if (req.path.startsWith('/lti')) {
-    res.status(500).json({
-      error: 'LTI processing failed',
-      message: error.message,
-      timestamp: new Date().toISOString()
-    });
-  } else {
-    next(error);
-  }
 });
 
 module.exports = { lti, ltiConfig };
