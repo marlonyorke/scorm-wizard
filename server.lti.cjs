@@ -145,14 +145,15 @@ lti.onConnect((token, req, res) => {
 
 // JWKS endpoint
 lti.app.get('/.well-known/jwks.json', (req, res) => {
-  try {
-    const keyset = lti.keyset();
-    console.log('📡 JWKS endpoint accessed:', keyset);
-    res.json(keyset);
-  } catch (error) {
-    logger.error('JWKS endpoint error', { error: error.message });
-    res.status(500).json({ error: 'JWKS generation failed' });
-  }
+  lti.keyset((err, keyset) => {
+    if (err) {
+      logger.error('JWKS endpoint error', { error: err.message });
+      res.status(500).json({ error: 'JWKS generation failed' });
+    } else {
+      console.log('📡 JWKS endpoint accessed:', keyset);
+      res.json(keyset);
+    }
+  });
 });
 
 // Health check for LTI service
