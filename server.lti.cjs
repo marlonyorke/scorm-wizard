@@ -3,6 +3,7 @@
  * Integrates SCORM Wizard with Moodle via LTI 1.3
  */
 
+const express = require('express');
 const LTI = require('ltijs');
 const helmet = require('helmet');
 require('dotenv').config();
@@ -56,6 +57,14 @@ if (!lti) {
 
 // Apply helmet middleware
 lti.app.use(helmet());
+
+// Verify and apply helmet
+if (typeof helmet === 'function') {
+  lti.app.use(helmet());
+  console.log('✅ Helmet middleware applied successfully');
+} else {
+  console.warn('⚠️ Helmet is not a function, skipping security middleware');
+}
 
 // Error handling (version-agnostic)
 const errorHandler = (req, res, error) => {
