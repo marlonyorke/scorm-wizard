@@ -38,6 +38,30 @@ console.log('=== END DEBUG ===');
 // Initialize Express app
 const app = express();
 
+// Publieke health endpoint (altijd bereikbaar, ongeacht LTI status)
+app.get('/lti/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'lti', timestamp: new Date().toISOString() });
+});
+
+// Publieke JWKS endpoint (dummy response als provider nog niet klaar is)
+app.get('/.well-known/jwks.json', (req, res) => {
+  try {
+    if (typeof lti !== 'undefined' && lti && typeof lti.keyset === 'function') {
+      lti.keyset((err, keyset) => {
+        if (err) {
+          res.status(500).json({ error: 'JWKS generation failed', details: err.message });
+        } else {
+          res.json(keyset);
+        }
+      });
+    } else {
+      res.json({ keys: [] }); // Dummy leeg JWKS als provider nog niet klaar is
+    }
+  } catch (e) {
+    res.status(500).json({ error: 'JWKS endpoint error', details: e.message });
+  }
+});
+
 // Initialize LTI provider
 const dbConfig = { url: process.env.LTI_DATABASE_URL || ':memory:' };
 const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
