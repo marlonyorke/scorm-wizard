@@ -4,32 +4,26 @@
  */
 
 const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
 const LTI = require('ltijs');
 require('dotenv').config();
 
-// Gebruik een simpele logger om ES module conflict te vermijden
 const logger = {
   info: (msg, data) => console.log('[LTI]', msg, data || ''),
   warn: (msg, data) => console.warn('[LTI]', msg, data || ''),
   error: (msg, data) => console.error('[LTI]', msg, data || '')
 };
 
-// LTI Configuration
 const ltiConfig = {
   appRoute: '/lti',
   loginRoute: '/lti/auth',
   keysetRoute: '/.well-known/jwks.json',
   dynRegRoute: '/register',
   tokenRoute: '/token',
-  sessionTimeout: 60000, // 1 hour
+  sessionTimeout: 60000,
   devMode: process.env.NODE_ENV === 'development'
 };
 
-// Debug: Alle relevante environment variables
+// Debug logging
 console.log('=== LTI DEBUG INFO ===');
 console.log('LTI_DATABASE_URL:', process.env.LTI_DATABASE_URL);
 console.log('LTI_CLIENT_ID:', process.env.LTI_CLIENT_ID);
@@ -38,78 +32,49 @@ console.log('BASE_URL:', process.env.BASE_URL);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('=== END DEBUG ===');
 
-// Debug: Database configuration details
-console.log('=== LTI DATABASE DEBUG ===');
-console.log('Database URL:', process.env.LTI_DATABASE_URL);
-console.log('Database Type:', 'sqlite');
-console.log('Database Config Object:', JSON.stringify({
-  url: process.env.LTI_DATABASE_URL || 'memory',
-  type: 'sqlite'
-}, null, 2));
-console.log('=== END DATABASE DEBUG ===');
-
-// If provider was already initialized in another require, reuse and exit early
-if (global.__ltiProvider) {
-  module.exports = { lti: global.__ltiProvider };
-  console.log('ℹ️ LTI Provider already initialized earlier – reusing instance.');
-  return;
-}
-
-// DEBUG PATCH: Trace ltijs Database class constructor
-const originalDatabaseConstructor = require('ltijs/dist/Utils/Database').default;
-const patchedDatabaseConstructor = function(config) {
-  console.log('🔍 ltijs Database constructor called with config:', JSON.stringify(config, null, 2));
-  
-  // Check for required fields
-  if (!config || !config.url) {
-    console.error('❌ MISSING_DATABASE_CONFIG: No url provided');
-    throw new Error('MISSING_DATABASE_CONFIG');
-  }
-  
-  console.log('✅ Database config has url:', config.url);
-  return new originalDatabaseConstructor(config);
-};
-require('ltijs/dist/Utils/Database').default = patchedDatabaseConstructor;
-
-// Initialize LTI Provider - with exact documented format
-let provider;
-try {
-  // ltijs expects only url and optional connection/debug/plugin fields
-  const dbConfig = {
-    url: process.env.LTI_DATABASE_URL || 'memory'
-  };
-
-  // Re-use existing provider if it was already created elsewhere
-  if (global.__ltiProvider) {
-    console.log('ℹ️ Reusing existing LTI Provider instance');
-    provider = global.__ltiProvider;
-  } else {
-    console.log('Attempting LTI Provider setup with documented config:', JSON.stringify(dbConfig, null, 2));
-    // ltijs expects arguments: encryptionKey, databaseConfig, options
+// Singleton pattern - ensure single initialization
+let lti;
+if (!global.__ltiProvider) {
+  try {
+    const dbConfig = { url: process.env.LTI_DATABASE_URL || ':memory:' };
     const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
-    provider = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
+    global.__ltiProvider = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
     console.log('✅ LTI Provider initialized successfully');
-    global.__ltiProvider = provider; // cache for subsequent requires
+    lti = global.__ltiProvider;
+  } catch (error) {
+    logger.error('LTI Provider initialization failed', { error: error.message });
+    throw error;
   }
-} catch (error) {
-  console.error('❌ LTI Provider initialization failed:', error.message);
-  console.error('Error stack:', error.stack);
-  console.error('Documented database config format:', {
-    url: 'database connection url',
-    connection: { /* optional MongoDB options */ },
-    debug: true/false,
-    plugin: 'optional plugin'
-  });
-  throw error;
+} else {
+  console.log('ℹ️ Reusing existing LTI Provider instance');
+  lti = global.__ltiProvider;
 }
 
-// Alias for convenience
-const lti = provider;
-// Export the provider for use in server.refactored.cjs
-module.exports = { lti };
+if (!lti) {
+  throw new Error('LTI provider is not available');
+}
 
-// (Optional) Register platform here if needed using provider.registerPlatform(...)
-// Duplicate static setup removed to avoid PROVIDER_ALREADY_SETUP error
+// Error handling (version-agnostic)
+const errorHandler = (req, res, error) => {
+  logger.error('LTI Error', { error: error.message, stack: error.stack });
+  let errorPage = '/lti-error';
+  if (error.message.includes('invalid')) {
+    errorPage += '?reason=invalid_launch';
+  } else if (error.message.includes('unauthorized')) {
+    errorPage += '?reason=unauthorized';
+  } else if (error.message.includes('expired')) {
+    errorPage += '?reason=expired_token';
+  } else {
+    errorPage += '?reason=generic_error';
+  }
+  res.redirect(errorPage);
+};
+
+if (typeof lti.onError === 'function') {
+  lti.onError(errorHandler);
+} else if (typeof lti.on === 'function') {
+  lti.on('error', errorHandler);
+}
 
 // LTI Launch Handler
 lti.onConnect((token, req, res) => {
@@ -157,29 +122,16 @@ lti.onConnect((token, req, res) => {
   }
 });
 
-// LTI Error Handling
-lti.onError((req, res, error) => {
-  logger.error('LTI Error', { error: error.message, stack: error.stack });
-  
-  // Determine error type and redirect appropriately
-  let errorPage = '/lti-error';
-  
-  if (error.message.includes('invalid')) {
-    errorPage += '?reason=invalid_launch';
-  } else if (error.message.includes('unauthorized')) {
-    errorPage += '?reason=unauthorized';
-  } else if (error.message.includes('expired')) {
-    errorPage += '?reason=expired_token';
-  } else {
-    errorPage += '?reason=generic_error';
-  }
-  
-  res.redirect(errorPage);
-});
-
-// JWKS endpoint for key rotation
+// JWKS endpoint
 lti.app.get('/.well-known/jwks.json', (req, res) => {
-  res.json(lti.keyset());
+  try {
+    const keyset = lti.keyset();
+    console.log('📡 JWKS endpoint accessed:', keyset);
+    res.json(keyset);
+  } catch (error) {
+    logger.error('JWKS endpoint error', { error: error.message });
+    res.status(500).json({ error: 'JWKS generation failed' });
+  }
 });
 
 // Health check for LTI service
