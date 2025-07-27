@@ -3,8 +3,8 @@
  * Integrates SCORM Wizard with Moodle via LTI 1.3
  */
 
-const express = require('express');
 const LTI = require('ltijs');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const logger = {
@@ -53,6 +53,9 @@ if (!global.__ltiProvider) {
 if (!lti) {
   throw new Error('LTI provider is not available');
 }
+
+// Apply helmet middleware
+lti.app.use(helmet());
 
 // Error handling (version-agnostic)
 const errorHandler = (req, res, error) => {
