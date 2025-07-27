@@ -150,7 +150,7 @@ lti.app.get('/.well-known/jwks.json', (req, res) => {
       logger.error('JWKS endpoint error', { error: err.message });
       res.status(500).json({ error: 'JWKS generation failed' });
     } else {
-      console.log('📡 JWKS endpoint accessed:', keyset);
+      console.log(' JWKS endpoint accessed:', keyset);
       res.json(keyset);
     }
   });
@@ -158,6 +158,11 @@ lti.app.get('/.well-known/jwks.json', (req, res) => {
 
 // Health check for LTI service
 lti.app.get('/lti/health', (req, res) => {
+  logger.info('LTI health check initiated', {
+    ip: req.ip,
+    userAgent: req.get('User-Agent'),
+    referer: req.get('Referer')
+  });
   res.json({ 
     status: 'healthy', 
     service: 'lti',
