@@ -197,4 +197,13 @@ lti.app.get('/lti/config', (req, res) => {
   });
 });
 
+// Zorg dat de server actief blijft op Render
+const PORT = process.env.PORT || 3002;
+const keepAliveApp = express();
+keepAliveApp.get('/__keepalive', (req, res) => res.send('OK'));
+keepAliveApp.listen(PORT, () => {
+  console.log(`Keep-alive Express server draait op poort ${PORT}`);
+});
+
 module.exports = { lti, ltiConfig };
+
