@@ -223,8 +223,9 @@ lti.app.get('/lti/config', (req, res) => {
 
 const PORT = process.env.PORT || 3002;
 
-lti.app.listen(PORT, () => {
-  console.log(`LTI app draait op poort ${PORT}`);
+app.use(lti.app);
+app.listen(PORT, () => {
+  console.log(`Express hoofd-app draait op poort ${PORT}`);
 });
 
 module.exports = { lti, ltiConfig };
