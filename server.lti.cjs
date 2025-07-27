@@ -7,6 +7,7 @@ const express = require('express');
 const LTI = require('ltijs');
 const helmet = require('helmet');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const logger = {
@@ -69,10 +70,31 @@ if (typeof helmet === 'function') {
 
 // Apply CORS middleware
 if (typeof cors === 'function') {
-  lti.app.use(cors());
+  lti.app.use(cors({
+    origin: [
+      process.env.MOODLE_URL || 'https://localhost',
+      process.env.FRONTEND_URL || 'http://localhost:8082'
+    ],
+    credentials: true
+  }));
   console.log('✅ CORS middleware applied successfully');
 } else {
   console.warn('⚠️ CORS is not a function, skipping CORS middleware');
+}
+
+// Apply rate limiting middleware
+if (typeof rateLimit === 'function') {
+  const ltiRateLimit = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many LTI requests from this IP',
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  lti.app.use('/lti', ltiRateLimit);
+  console.log('✅ Rate limiting middleware applied successfully');
+} else {
+  console.warn('⚠️ RateLimit is not a function, skipping rate limiting');
 }
 
 // Error handling (version-agnostic)
