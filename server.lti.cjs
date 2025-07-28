@@ -9,6 +9,7 @@ const LTI = require('ltijs');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 require('dotenv').config();
 
 const logger = {
@@ -243,6 +244,18 @@ const PORT = process.env.PORT || 3002;
     });
     logger.info('LTI-provider succesvol gedeployed!');
     app.use(lti.app);
+
+    const distPath = path.join(__dirname, 'dist');
+    app.use(express.static(distPath));
+
+    app.get('/lti-error', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+
     app.listen(PORT, () => {
       console.log(`Express hoofd-app draait op poort ${PORT}`);
     });

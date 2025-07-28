@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import LTIErrorPage from "@/pages/LTIErrorPage";
 
 import DevTools from "@/components/dev/DevTools";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
@@ -28,6 +29,7 @@ function App() {
               <Route path="/question-types" element={<Navigate to="/" replace />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/scorm" element={<ScormPage />} />
+              <Route path="/lti-error" element={<LTIErrorPage />} />
               <Route path="/ai-generator" element={<Navigate to="/" replace />} />
               <Route path="/multiple-choice-test" element={<Navigate to="/" replace />} />
             </Routes>
