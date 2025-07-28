@@ -4,6 +4,7 @@
  */
 
 const express = require('express');
+const session = require('express-session');
 const LTI = require('ltijs');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -38,6 +39,13 @@ console.log('=== END DEBUG ===');
 // Initialize Express app
 const app = express();
 app.set('trust proxy', 1);
+// Session middleware (vereist voor LTI OIDC flow)
+app.use(session({
+  secret: process.env.LTI_ENCRYPTION_KEY || 'supersecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Render gebruikt HTTP(S) proxy
+}));
 
 // Publieke health endpoint (altijd bereikbaar, ongeacht LTI status)
 app.get('/lti/health', (req, res) => {
@@ -195,14 +203,6 @@ lti.app.get('/lti/health', (req, res) => {
   });
 });
 
-// LTI launch endpoint
-lti.app.post('/lti/launch', (req, res) => {
-  logger.info('LTI launch initiated', {
-    ip: req.ip,
-    userAgent: req.get('User-Agent'),
-    referer: req.get('Referer')
-  });
-});
 
 // LTI configuration endpoint
 lti.app.get('/lti/config', (req, res) => {
@@ -222,12 +222,35 @@ lti.app.get('/lti/config', (req, res) => {
   });
 });
 
+// LTI OIDC initiate login endpoint (vereist voor LTI 1.3)
+lti.app.get('/lti/auth', (req, res) => {
+  logger.info('OIDC initiate login gestart', {
+    ip: req.ip,
+    userAgent: req.get('User-Agent'),
+    query: req.query
+  });
+  lti.redirect(req, res);
+});
+
 const PORT = process.env.PORT || 3002;
 
-app.use(lti.app);
-app.listen(PORT, () => {
-  console.log(`Express hoofd-app draait op poort ${PORT}`);
-});
+(async () => {
+  try {
+    logger.info('Initialiseer LTI-provider...');
+    await lti.deploy({
+      serverless: true,
+      app: true
+    });
+    logger.info('LTI-provider succesvol gedeployed!');
+    app.use(lti.app);
+    app.listen(PORT, () => {
+      console.log(`Express hoofd-app draait op poort ${PORT}`);
+    });
+  } catch (err) {
+    logger.error('FOUT bij initialisatie LTI-provider', err);
+    process.exit(1);
+  }
+})();
 
 module.exports = { lti, ltiConfig };
 
