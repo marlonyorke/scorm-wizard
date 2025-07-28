@@ -2,6 +2,10 @@
 
 Deze handleiding legt uit hoe je de SCORM Wizard server kunt starten en beheren zonder dat je hoofdterminal geblokkeerd wordt.
 
+## Systeemvereisten
+
+Deze applicatie is getest met Node.js versies 18 tot en met 21. Zorg dat je een Node versie gebruikt die voldoet aan `>=18 <22` om compatibiliteitsproblemen te voorkomen.
+
 ## Inhoudsopgave
 
 1. [Server starten](#server-starten)
