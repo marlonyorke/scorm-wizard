@@ -139,10 +139,40 @@ app.get('/lti/health', (req, res) => {
   });
 });
 
-// JWKS endpoint
-app.get('/.well-known/jwks.json', (req, res) => {
-  const jwks = lti.getJWKS();
-  res.json(jwks);
+// JWKS endpoint (root)
+app.get('/.well-known/jwks.json', async (req, res) => {
+  try {
+    let jwks;
+    if (typeof lti.Platform?.JWKS === 'function') {
+      jwks = await lti.Platform.JWKS();
+    } else if (typeof lti.getPlatformJwks === 'function') {
+      jwks = await lti.getPlatformJwks();
+    } else {
+      throw new Error('No JWKS method found on ltijs Provider');
+    }
+    res.json(jwks);
+  } catch (err) {
+    logError('Failed to serve JWKS', err);
+    res.status(500).json({ error: 'Internal server error', message: err.message });
+  }
+});
+
+// JWKS endpoint (onder /lti)
+app.get('/lti/.well-known/jwks.json', async (req, res) => {
+  try {
+    let jwks;
+    if (typeof lti.Platform?.JWKS === 'function') {
+      jwks = await lti.Platform.JWKS();
+    } else if (typeof lti.getPlatformJwks === 'function') {
+      jwks = await lti.getPlatformJwks();
+    } else {
+      throw new Error('No JWKS method found on ltijs Provider');
+    }
+    res.json(jwks);
+  } catch (err) {
+    logError('Failed to serve JWKS', err);
+    res.status(500).json({ error: 'Internal server error', message: err.message });
+  }
 });
 
 // LTI launch endpoint
