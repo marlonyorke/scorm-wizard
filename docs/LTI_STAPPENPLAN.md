@@ -5,7 +5,7 @@ Dit plan is gericht op een solo-project, proof-of-concept of kleine pilot. Allee
 ---
 
 ## 1. Voorbereiding
-- [✅] **Installeer ltijs**: `npm install ltijs express-session`
+- [✅] **Installeer ltijs**: `npm install ltijs express-session connect-sqlite3`
 - [✅] **.env**: Zet secrets (client secret, db-url) in `.env` (niet in git)
 - [✅] **HTTPS via ngrok**: Start je backend met `ngrok http 3002` (LTI 1.3 vereist HTTPS)
 https://19cc-178-224-10-53.ngrok-free.app  →  http://localhost:3002
