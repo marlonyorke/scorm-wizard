@@ -4,29 +4,11 @@ const cors = require('cors');
 const path = require('path');
 const { Provider } = require('ltijs');
 const Database = require('ltijs-sequelize');
+const SQLiteStore = require('connect-sqlite3')(session);
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3002;
-
-// Debug logging
-console.log('=== LTI SERVER STARTUP DEBUG ===');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('PORT:', PORT);
-console.log('LTI_KEY exists:', !!process.env.LTI_KEY);
-console.log('DATABASE_URL:', process.env.DATABASE_URL);
-console.log('LTI_DATABASE_URL:', process.env.LTI_DATABASE_URL);
-
-// Environment variable validation
-if (!process.env.LTI_KEY) {
-  console.warn('WARNING: LTI_KEY not set, using default');
-}
-
-if (!process.env.DATABASE_URL && !process.env.LTI_DATABASE_URL) {
-  console.warn('WARNING: No database URL found, using default sqlite file');
-}
-
-console.log('=== END DEBUG ===');
 
 // CORS configuratie
 app.use(cors({
@@ -34,8 +16,12 @@ app.use(cors({
   credentials: true
 }));
 
-// Session configuratie
+// Session configuratie met permanente store
 app.use(session({
+  store: new SQLiteStore({
+    db: 'sessions.sqlite',
+    dir: '.'
+  }),
   secret: process.env.LTI_KEY || 'your-lti-key-here',
   resave: false,
   saveUninitialized: false,
@@ -50,47 +36,17 @@ app.use(session({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Database configuratie - Verbeterd voor Render
-console.log('=== DATABASE CONFIG DEBUG ===');
-console.log('Process env keys:', Object.keys(process.env).filter(key => key.includes('DATABASE') || key.includes('DB')));
-
-// Render-specifieke database configuratie
-// Fix voor 'file:' protocol dat niet werkt met Sequelize
-const getStoragePath = () => {
-  const url = process.env.DATABASE_URL || process.env.LTI_DATABASE_URL;
-  if (url) {
-    // Verwijder 'file:' prefix als die aanwezig is
-    if (url.startsWith('file:')) {
-      return url.substring(5); // Verwijder 'file:'
-    }
-    return url;
-  }
-  return './database.sqlite'; // Default
-};
-
+// Database configuratie
 const dbConfig = {
   dialect: 'sqlite',
-  storage: getStoragePath(),
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  // Add explicit dialect configuration to prevent Sequelize errors
-  dialectOptions: {
-    // SQLite specific options
-  }
+  storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './database.sqlite',
+  logging: false
 };
 
-console.log('Database config:', dbConfig);
-
-let db;
-try {
-  db = new Database(dbConfig);
-  console.log('Database initialized successfully');
-} catch (dbError) {
-  console.error('Database initialization failed:', dbError);
-  process.exit(1);
-}
+const db = new Database(dbConfig);
 
 // LTI setup
-const lti = Provider;
+const lti = new Provider();
 
 // Setup LTI routes
 lti.setup(

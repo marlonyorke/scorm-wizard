@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Database
+*.sqlite
+*.sqlite3
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -31,3 +35,12 @@ dist-ssr
 
 # Vercel
 .vercel
+
+# Render
+.render
+
+# Temporary files
+*.tmp
+*.temp
+~*
+*.bak
