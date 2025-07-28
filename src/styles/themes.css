@@ -1,0 +1,560 @@
+/* Basis CSS-variabelen voor light en dark mode */
+
+:root {
+  /* Algemene variabelen */
+  --radius: 0.75rem;
+  --transition-speed: 0.3s;
+  --transition-easing: ease;
+  
+  /* Light mode (standaard) */
+  --primary-bg: #f8f9fa;
+  --secondary-bg: #ffffff;
+  --primary-text: #333333;
+  --secondary-text: #666666;
+  --border-color: #e0e0e0;
+  --input-color: #f0f0f0;
+  --ring-color: rgba(0, 0, 0, 0.1);
+  
+  /* Accent kleuren */
+  --primary-accent: #4361ee;
+  --secondary-accent: #3a0ca3;
+  
+  /* Status kleuren */
+  --success: #4cc9f0;
+  --warning: #fcbf49;
+  --error: #ef476f;
+  
+  /* RGB variabelen voor gebruik in rgba */
+  --primary-accent-rgb: 67, 97, 238;
+  --secondary-accent-rgb: 58, 12, 163;
+  --success-rgb: 76, 201, 240;
+  --error-rgb: 239, 71, 111;
+  
+  /* Gradiënten */
+  --primary-gradient: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  --accent-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  
+  /* Schaduwen */
+  --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Specifieke stijlen voor componenten */
+
+/* Knoppen */
+button {
+  transition: all var(--transition-speed) var(--transition-easing);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(var(--primary-accent-rgb), 0.2);
+}
+
+/* Inputs */
+input, textarea, select {
+  background-color: var(--input-color);
+  border: 1px solid var(--border-color);
+  color: var(--primary-text);
+  transition: all var(--transition-speed) var(--transition-easing);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 2px rgba(var(--primary-accent-rgb), 0.2);
+}
+
+/* Multiple choice opties */
+[class*="MultipleChoiceQuestion"] div[role="button"],
+[class*="MultipleChoiceQuestion"] div[class*="cursor-pointer"] {
+  transition: all var(--transition-speed) var(--transition-easing);
+  border: 1px solid var(--border-color);
+}
+
+[class*="MultipleChoiceQuestion"] div[role="button"]:hover,
+[class*="MultipleChoiceQuestion"] div[class*="cursor-pointer"]:hover {
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 5px rgba(var(--primary-accent-rgb), 0.2);
+}
+
+[class*="MultipleChoiceQuestion"] div[data-state="checked"],
+[class*="MultipleChoiceQuestion"] div[class*="selected"] {
+  border-color: var(--primary-accent);
+  background-color: rgba(var(--primary-accent-rgb), 0.1);
+}
+
+/* Feedback stijlen */
+[class*="bg-success"] {
+  background-color: rgba(var(--success-rgb), 0.1);
+  border-color: var(--success);
+}
+
+[class*="bg-error"] {
+  background-color: rgba(var(--error-rgb), 0.1);
+  border-color: var(--error);
+}
+
+/* Basis stijlen voor alle thema's */
+body {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+}
+
+.bg-primary {
+  background-color: var(--primary-bg);
+}
+
+.bg-secondary {
+  background-color: var(--secondary-bg);
+}
+
+.text-primary {
+  color: var(--primary-text);
+}
+
+.text-secondary {
+  color: var(--secondary-text);
+}
+
+.text-accent {
+  color: var(--primary-accent);
+}
+
+/* Knoppen en interactieve elementen */
+.btn-primary,
+.btn-accent,
+button[class*="bg-primary-accent"] {
+  background-color: var(--primary-accent);
+  color: white;
+}
+
+.btn-secondary,
+button[class*="bg-secondary-accent"] {
+  background-color: var(--secondary-accent);
+  color: white;
+}
+
+/* Gradiënten */
+.primary-gradient-bg {
+  background: var(--primary-gradient);
+}
+
+.accent-gradient-bg {
+  background: var(--accent-gradient);
+}
+
+/* Borders */
+.border-accent {
+  border-color: var(--primary-accent);
+}
+
+.border-success {
+  border-color: var(--success);
+}
+
+.border-error {
+  border-color: var(--error);
+}
+
+/* Glow effecten */
+.glow-effect,
+.gold-glow {
+  box-shadow: var(--box-shadow);
+}
+
+/* Verbeterde leesbaarheid voor licht thema */
+.text-muted-foreground {
+  color: rgba(128, 128, 128, 0.95); /* Verhoogde opaciteit voor betere leesbaarheid */
+}
+
+/* Inputs en form elementen */
+.input, 
+.select, 
+.textarea {
+  background-color: var(--input-color);
+  border-color: var(--border-color);
+}
+
+/* Feedback kleuren */
+.bg-success, 
+.bg-success\/10 {
+  background-color: rgba(var(--success-rgb), 0.1);
+}
+
+.bg-error, 
+.bg-error\/10 {
+  background-color: rgba(var(--error-rgb), 0.1);
+}
+
+/* Ultra Modern Dark Mode voor Multiple Choice Editor */
+.theme-neon,
+body.theme-neon {
+  /* Hoofdkleuren */
+  --primary-bg: #0f0a2a;
+  --secondary-bg: #1e0f5c;
+  --card-bg: #1a1244;
+  --input-bg: #1f1755;
+  --input-bg-gradient: linear-gradient(90deg, #1f1755, #2a1c6e);
+  
+  /* Accent kleuren */
+  --primary-accent: #7b2ff7;
+  --secondary-accent: #3500d3;
+  --tertiary-accent: #00f2ff;
+  --quaternary-accent: #01bfcc;
+  
+  /* Text kleuren */
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
+  --text-muted: #ffffff;
+  
+  /* Gradients */
+  --header-gradient: linear-gradient(90deg, #240090, #3500d3);
+  --button-gradient: linear-gradient(135deg, #7b2ff7, #3500d3);
+  --save-gradient: linear-gradient(135deg, #00f2ff, #01bfcc);
+  --card-gradient: linear-gradient(135deg, rgba(36, 0, 144, 0.4), rgba(53, 0, 211, 0.2));
+  --page-gradient: linear-gradient(135deg, #0f0a2a, #2a1c6e);
+  
+  /* Effecten */
+  --neon-glow: 0 0 5px rgba(123, 47, 247, 0.5), 0 0 10px rgba(0, 242, 255, 0.3);
+  --soft-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Algemene styling */
+.theme-neon,
+body.theme-neon {
+  background: var(--page-gradient);
+  color: #ffffff !important;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decoratieve cirkels voor achtergrond zoals in de tweede afbeelding */
+body.theme-neon::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 0% 20%, rgba(123, 47, 247, 0.3), transparent 25%),
+    radial-gradient(circle at 100% 80%, rgba(0, 242, 255, 0.2), transparent 25%);
+  z-index: -2;
+}
+
+/* Decoratieve elementen zoals in de tweede afbeelding */
+.theme-neon .decorative-circle,
+body.theme-neon .decorative-circle {
+  position: absolute;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.theme-neon .circle-1,
+body.theme-neon .circle-1 {
+  width: 20px;
+  height: 20px;
+  background-color: var(--tertiary-accent);
+  opacity: 0.8;
+  left: 0;
+  top: 30%;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+}
+
+.theme-neon .circle-2,
+body.theme-neon .circle-2 {
+  width: 20px;
+  height: 20px;
+  background-color: var(--primary-accent);
+  opacity: 0.8;
+  right: 0;
+  top: 70%;
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.8);
+}
+
+.theme-neon .circle-3,
+body.theme-neon .circle-3 {
+  width: 10px;
+  height: 10px;
+  background-color: var(--tertiary-accent);
+  opacity: 0.6;
+  left: 0;
+  top: 70%;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.6);
+}
+
+.theme-neon .circle-4,
+body.theme-neon .circle-4 {
+  width: 10px;
+  height: 10px;
+  background-color: var(--primary-accent);
+  opacity: 0.6;
+  right: 0;
+  top: 30%;
+  box-shadow: 0 0 10px rgba(123, 47, 247, 0.6);
+}
+
+/* Header styling */
+.theme-neon .header,
+body.theme-neon .header {
+  background-color: rgba(26, 18, 68, 0.7);
+  backdrop-filter: blur(10px);
+  border-left: 6px solid var(--tertiary-accent);
+  box-shadow: var(--soft-shadow);
+}
+
+/* Hoofdcontainer */
+.theme-neon .main-container,
+body.theme-neon .main-container {
+  background-color: rgba(26, 18, 68, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  border: 1px solid rgba(123, 47, 247, 0.3);
+}
+
+/* Sectiekop */
+.theme-neon .section-header,
+body.theme-neon .section-header {
+  background-image: linear-gradient(90deg, #3500d3, #7b2ff7);
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+}
+
+/* Secties en kaarten */
+.theme-neon .card,
+body.theme-neon .card,
+.theme-neon [class*="card"],
+body.theme-neon [class*="card"],
+.theme-neon [class*="shadow"],
+body.theme-neon [class*="shadow"] {
+  background-color: rgba(26, 18, 68, 0.7);
+  backdrop-filter: blur(5px);
+  border-radius: 15px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(123, 47, 247, 0.3);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Invoervelden */
+.theme-neon input,
+.theme-neon select,
+.theme-neon textarea,
+body.theme-neon input,
+body.theme-neon select,
+body.theme-neon textarea {
+  background: rgba(31, 23, 85, 0.7);
+  border: 1px solid rgba(123, 47, 247, 0.3);
+  border-radius: 10px;
+  color: #ffffff !important;
+  padding: 15px;
+  height: auto;
+  backdrop-filter: blur(5px);
+}
+
+/* Knoppen */
+.theme-neon .btn-primary,
+body.theme-neon .btn-primary {
+  background-image: linear-gradient(135deg, #7b2ff7, #3500d3);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff !important;
+  font-weight: bold;
+  padding: 15px 25px;
+  box-shadow: 0 0 15px rgba(123, 47, 247, 0.4);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.theme-neon .btn-primary:hover,
+body.theme-neon .btn-primary:hover {
+  box-shadow: 0 0 20px rgba(123, 47, 247, 0.7);
+  transform: translateY(-2px);
+}
+
+.theme-neon .btn-save,
+body.theme-neon .btn-save {
+  background-image: linear-gradient(135deg, #00f2ff, #01bfcc);
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+}
+
+.theme-neon .btn-save:hover,
+body.theme-neon .btn-save:hover {
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.7);
+}
+
+/* Stepper styling voor neon theme */
+.theme-neon .ai-stepper,
+body.theme-neon .ai-stepper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.theme-neon .ai-stepper-btn,
+body.theme-neon .ai-stepper-btn {
+  font-size: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid #00f2ff;
+  background: rgba(26,18,68,0.9);
+  color: #00f2ff;
+  box-shadow: 0 0 10px #00f2ff, 0 0 20px #7b2ff7;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.theme-neon .ai-stepper-btn[disabled],
+body.theme-neon .ai-stepper-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.theme-neon .ai-stepper-value,
+body.theme-neon .ai-stepper-value {
+  width: 3rem;
+  text-align: center;
+  font-size: 1.3rem;
+  border: none;
+  background: transparent;
+  color: #00f2ff;
+  font-weight: bold;
+  text-shadow: 0 0 8px #7b2ff7;
+}
+
+/* Slider styling zoals in de tweede afbeelding */
+.theme-neon .slider,
+body.theme-neon .slider {
+  height: 6px;
+  background-color: rgba(31, 23, 85, 0.7);
+  border-radius: 3px;
+}
+
+.theme-neon .slider-filled,
+body.theme-neon .slider-filled {
+  background-color: var(--tertiary-accent);
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+  height: 6px;
+  border-radius: 3px;
+}
+
+.theme-neon .slider-thumb,
+body.theme-neon .slider-thumb {
+  width: 28px;
+  height: 28px;
+  background-color: var(--tertiary-accent);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+
+/* Gemarkeerde woorden zoals in de tweede afbeelding */
+.theme-neon .marked-word,
+body.theme-neon .marked-word {
+  color: var(--tertiary-accent) !important;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(0, 242, 255, 0.5);
+}
+
+/* Media queries voor responsiveness */
+@media (max-width: 768px) {
+  .theme-neon .card,
+  body.theme-neon .card {
+    margin-bottom: 15px;
+  }
+  
+  .theme-neon .section-title,
+  body.theme-neon .section-title {
+    font-size: 18px;
+  }
+  
+  .theme-neon .card-label,
+  body.theme-neon .card-label {
+    font-size: 14px;
+  }
+}
+
+/* Zorg dat alle tekst wit is */
+.theme-neon *,
+body.theme-neon * {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor kaarten en hun inhoud */
+.theme-neon .card,
+body.theme-neon .card,
+.theme-neon .card *,
+body.theme-neon .card * {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor de hoofdpagina */
+.theme-neon .home-page,
+body.theme-neon .home-page,
+.theme-neon .home-page *,
+body.theme-neon .home-page * {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor de kaarten op de hoofdpagina */
+.theme-neon .question-type-card,
+body.theme-neon .question-type-card,
+.theme-neon .question-type-card *,
+body.theme-neon .question-type-card * {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor de titels */
+.theme-neon h1, .theme-neon h2, .theme-neon h3, 
+.theme-neon h4, .theme-neon h5, .theme-neon h6,
+body.theme-neon h1, body.theme-neon h2, body.theme-neon h3, 
+body.theme-neon h4, body.theme-neon h5, body.theme-neon h6 {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor paragrafen */
+.theme-neon p,
+body.theme-neon p {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor spans */
+.theme-neon span,
+body.theme-neon span {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor links */
+.theme-neon a,
+body.theme-neon a {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor labels */
+.theme-neon label,
+body.theme-neon label {
+  color: #ffffff !important;
+}
+
+/* Specifieke regels voor div elementen */
+.theme-neon div,
+body.theme-neon div {
+  color: #ffffff !important;
+}
+
+/* Specifieke selectie styling voor QuestionTypeSelection cards in neon theme */
+.theme-neon .selected-card,
+body.theme-neon .selected-card {
+  border-color: #00ff00 !important;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
+  transform: scale(1.05) !important;
+}
+
+.theme-neon .card-border-selected,
+body.theme-neon .card-border-selected {
+  border: 2px solid #00ff00 !important;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.6), 0 0 40px rgba(0, 255, 0, 0.3) !important;
+}

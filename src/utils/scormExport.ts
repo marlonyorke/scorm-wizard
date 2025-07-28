@@ -1,0 +1,1 @@
+export { generateScormPackage } from "./scorm/package";

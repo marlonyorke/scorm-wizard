@@ -1,0 +1,255 @@
+Fase 1: Voorbereidingen en Basisstructuur
+Stap 1: API Service Setup 
+Maak een nieuwe Vercel serverless functie aan in /api/generate-questions.ts
+Configureer de functie voor communicatie met OpenAI API
+Implementeer basisvalidatie voor inkomende verzoeken
+Stel een timeout in van 60 seconden (maximale uitvoeringstijd)
+Succescriteria:
+
+De functie is bereikbaar via een HTTP endpoint 
+Een eenvoudige test-request retourneert een 200 OK response 
+Foutieve requests worden correct afgehandeld met gepaste statuscode 
+De functie kan succesvol verbinding maken met de OpenAI API 
+Stap 2: Frontend Service Layer 
+Maak een nieuwe directory /src/services
+Creëer aiService.ts met functies voor API-communicatie
+Implementeer error handling en retry-logica
+Voeg typedefinities toe voor AI configuratieparameters
+Succescriteria:
+
+De service kan succesvol een test-request naar de API sturen 
+Netwerkfouten worden correct opgevangen en gerapporteerd 
+Retry-mechanisme werkt bij tijdelijke verbindingsproblemen 
+Alle functies hebben correcte TypeScript typedefinities 
+Stap 3: Type Definities Uitbreiden 
+Breid /src/types/editor.ts uit met AI-gerelateerde types
+Voeg interfaces toe voor configuratie, voortgang en resultaten
+Succescriteria:
+
+Alle nieuwe types zijn correct gedefinieerd 
+Er zijn geen TypeScript compilatiefouten 
+De types zijn volledig gedocumenteerd met JSDoc commentaar 
+De types dekken alle benodigde eigenschappen voor de AI-functionaliteit 
+Fase 2: Context en State Management
+Stap 4: QuestionsContext Uitbreiden
+Voeg AI-gerelateerde state toe aan QuestionsContext
+Implementeer functies voor AI-interactie
+Zorg voor correcte state updates tijdens generatie
+Succescriteria:
+
+Context biedt alle benodigde state en functies
+State updates worden correct doorgegeven aan componenten
+Generatiefuncties werken zonder side-effects
+De context behoudt backward compatibility met bestaande componenten
+Stap 5: Database/Logboek Structuur
+Ontwerp een schema voor het opslaan van gegenereerde vragen
+Implementeer een lichtgewicht database (Firebase/Supabase/IndexedDB)
+Creëer functies voor het opslaan en ophalen van vraaghistorie
+Implementeer duplicaatdetectie via hashing
+Succescriteria:
+
+Database is correct geconfigureerd en toegankelijk
+Vragen kunnen worden opgeslagen en opgehaald
+Duplicaatdetectie werkt correct
+Prestaties blijven goed bij groeiende database
+Fase 3: UI Componenten
+Stap 6: AI Generator Pagina
+Maak een nieuwe pagina /src/pages/AIQuestionGenerator.tsx
+Implementeer de basisstructuur met Card componenten
+Voeg routing toe in de hoofdapplicatie
+Succescriteria:
+
+Pagina is toegankelijk via de router
+Basisstructuur is responsive en volgt het thema
+Navigatie van en naar de pagina werkt correct
+Pagina laadt zonder console errors
+Stap 7: Configuratie Componenten
+Maak /src/components/ai-generator/AIConfigPanel.tsx
+Hergebruik bestaande selectors waar mogelijk
+Implementeer nieuwe velden voor thema en hoofdstuk
+Voeg batchgrootte selector toe (10/20/30/50)
+Succescriteria:
+
+Alle configuratie-opties zijn beschikbaar en functioneel
+Validatie voorkomt ongeldige configuraties
+UI is consistent met de rest van de applicatie
+Configuratie wordt correct opgeslagen en doorgegeven
+Stap 8: Materiaal Upload Component
+Maak /src/components/ai-generator/MaterialUploader.tsx
+Implementeer tekstinvoer voor eigen lesmateriaal
+Voeg validatie toe voor tekstlengte en inhoud
+Toon feedback over geschiktheid van het materiaal
+Succescriteria:
+
+Gebruikers kunnen tekst invoeren of plakken
+Validatie geeft duidelijke feedback bij problemen
+Lange teksten worden correct verwerkt
+Ingevoerde tekst wordt correct doorgegeven aan de API
+Stap 9: Voortgangs- en Resultaatcomponenten
+Maak /src/components/ai-generator/GenerationProgress.tsx
+Implementeer een gedetailleerde voortgangsindicator
+Toon informatieve statusberichten tijdens generatie
+Voeg annuleerknop toe met correcte afhandeling
+Succescriteria:
+
+Voortgangsindicator toont accurate informatie
+Statusberichten zijn informatief en begrijpelijk
+Annuleren werkt correct zonder orphaned requests
+Component blijft responsive tijdens lange generaties
+Fase 4: Integratie met Bestaande Workflow
+Stap 10: Navigatie Aanpassen
+Update /src/pages/QuestionTypeSelection.tsx
+Voeg een nieuwe knop toe: "AI-vragen genereren"
+Implementeer navigatie naar de nieuwe AI Generator pagina
+Succescriteria:
+
+Nieuwe knop is zichtbaar en toegankelijk
+Navigatie werkt correct met behoud van geselecteerde types
+UI is consistent met bestaande knoppen
+Gebruiker krijgt duidelijke feedback over de nieuwe functie
+Stap 11: Gegenereerde Vragen Reviewcomponent
+Maak /src/components/ai-generator/GeneratedQuestionsList.tsx
+Implementeer weergave van gegenereerde vragen
+Voeg opties toe voor accepteren/afwijzen per vraag
+Implementeer bulkacties voor alle vragen
+Succescriteria:
+
+Vragen worden correct weergegeven met alle details
+Individuele en bulk-acties werken zoals verwacht
+UI is intuïtief en gebruiksvriendelijk
+Prestaties blijven goed bij grote batches vragen
+Stap 12: Editor Integratie
+Update /src/pages/editor.tsx
+Voeg ondersteuning toe voor het laden van gegenereerde vragen
+Implementeer een speciale weergave voor AI-gegenereerde vragen
+Zorg voor naadloze overgang van AI Generator naar Editor
+Succescriteria:
+
+Gegenereerde vragen worden correct geladen in de editor
+AI-gegenereerde vragen zijn herkenbaar (bijv. met badge)
+Alle vraagfunctionaliteit werkt met gegenereerde vragen
+Overgang tussen pagina's is vloeiend en behoudt state
+Fase 5: API Implementatie
+Stap 13: Chunking Mechanisme voor Grote Batches
+Implementeer logica om grote batches op te splitsen
+Creëer een queue-systeem voor het verwerken van deelbatches
+Voeg functionaliteit toe voor het samenvoegen van resultaten
+Implementeer voortgangsrapportage per chunk
+Succescriteria:
+
+Grote batches worden correct opgesplitst en verwerkt
+Deelresultaten worden correct samengevoegd
+Voortgang wordt nauwkeurig gerapporteerd
+Systeem is robuust bij fouten in individuele chunks
+Stap 14: OpenAI Prompt Engineering
+Ontwerp een effectieve prompt template
+Specificeer JSON output format voor eenvoudige parsing
+Voeg voorbeelden toe van goede vragen
+Test de prompt met verschillende parameters
+Succescriteria:
+
+Prompt genereert consistent bruikbare vragen
+Output is correct geformatteerd als JSON
+Vragen voldoen aan de gespecificeerde kwaliteitscriteria
+Prompt werkt met verschillende vakgebieden en niveaus
+Stap 15: Zelf-evaluatie Implementeren
+Voeg een tweede prompt toe voor zelf-evaluatie
+Implementeer scoring op basis van kwaliteitscriteria
+Voeg logica toe voor hergeneratie van afgekeurde vragen
+Implementeer feedback-loop voor verbetering
+Succescriteria:
+
+Zelf-evaluatie identificeert lage-kwaliteit vragen
+Scoring is consistent met de kwaliteitscriteria
+Hergeneratie verbetert afgekeurde vragen
+Systeem leert van eerdere evaluaties
+Stap 16: Response Parsing en Validatie
+Implementeer robuuste JSON parsing
+Voeg schema-validatie toe voor gegenereerde vragen
+Implementeer fallbacks voor onverwachte responses
+Zorg voor informatieve foutmeldingen
+Succescriteria:
+
+Alle API responses worden correct geparsed
+Ongeldige responses worden gedetecteerd en gerapporteerd
+Fallbacks voorkomen crashes bij onverwachte data
+Gebruiker krijgt duidelijke informatie bij problemen
+Fase 6: Testen en Optimalisatie
+Stap 17: End-to-End Testen
+Test de volledige workflow met verschillende scenario's
+Controleer edge cases en foutafhandeling
+Test prestaties met verschillende batchgroottes
+Valideer SCORM-export van gegenereerde vragen
+Succescriteria:
+
+Volledige workflow werkt consistent in alle scenario's
+Edge cases worden correct afgehandeld
+Prestaties blijven acceptabel bij grote batches
+SCORM-export werkt correct met gegenereerde vragen
+Stap 18: Performance Optimalisatie
+Identificeer en los knelpunten in prestaties op
+Optimaliseer rendering van grote vraaglijsten
+Verbeter laadtijden en reactiesnelheid
+Test SCORM-export met verschillende batchgroottes
+Succescriteria:
+
+UI blijft responsive tijdens alle operaties
+Grote vraaglijsten renderen zonder vertraging
+Laadtijden zijn binnen acceptabele grenzen
+SCORM-export werkt efficiënt, zelfs met grote batches
+Stap 19: UI/UX Optimalisatie
+Zorg voor consistentie met bestaande thema's
+Optimaliseer voor verschillende schermformaten
+Verbeter feedback tijdens generatie
+Verfijn interactiepatronen voor intuïtief gebruik
+Succescriteria:
+
+UI is volledig consistent met bestaande thema's
+Interface werkt goed op alle schermformaten
+Gebruiker krijgt duidelijke feedback tijdens alle processen
+Gebruikerstests tonen intuïtief gebruik aan
+Fase 7: Documentatie en Lancering
+Stap 20: Transparantie en AI-uitleg
+Ontwikkel duidelijke uitleg over hoe de AI werkt
+Maak een transparante beschrijving van het generatieproces
+Leg uit hoe kwaliteitscriteria worden toegepast
+Voeg context toe over de beperkingen van AI
+Succescriteria:
+
+Uitleg is begrijpelijk voor de doelgroep
+Transparantie wekt vertrouwen bij gebruikers
+Beperkingen worden eerlijk gecommuniceerd
+Gebruikers begrijpen het generatieproces
+Stap 21: Gebruikersdocumentatie
+Maak een korte handleiding voor de AI-functie
+Voeg tooltips toe voor complexe opties
+Implementeer een "eerste keer" uitleg
+Creëer FAQ voor veelvoorkomende vragen
+Succescriteria:
+
+Handleiding dekt alle functionaliteit
+Tooltips zijn informatief en niet opdringerig
+"Eerste keer" uitleg is behulpzaam voor nieuwe gebruikers
+FAQ beantwoordt veelvoorkomende vragen
+Stap 22: Feedbackmechanisme
+Implementeer een gestructureerd feedbacksysteem
+Voeg beoordelingsopties toe voor gegenereerde vragen
+Creëer een dashboard voor feedbackanalyse
+Zet een proces op voor het verwerken van feedback
+Succescriteria:
+
+Gebruikers kunnen eenvoudig feedback geven
+Feedback wordt systematisch verzameld en opgeslagen
+Dashboard geeft inzicht in feedbacktrends
+Feedbackverwerking leidt tot verbeteringen
+Stap 23: Lancering en Monitoring
+Implementeer analytics voor gebruik van de AI-functie
+Zet monitoring op voor API-gebruik en kosten
+Creëer een systeem voor het detecteren van problemen
+Plan regelmatige evaluaties van de functionaliteit
+Succescriteria:
+
+Analytics geven inzicht in gebruikspatronen
+Monitoring waarschuwt bij onverwacht API-gebruik
+Problemen worden vroeg gedetecteerd en opgelost
+Evaluaties leiden tot continue verbetering
