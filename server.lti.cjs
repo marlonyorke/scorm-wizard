@@ -144,6 +144,10 @@ app.get('/lti/health', (req, res) => {
 console.log('lti Provider keys:', Object.keys(lti));
 console.log('lti Provider:', lti);
 
+// DEBUG: Log JWKS method detection
+console.log('lti.Platform:', lti.Platform);
+console.log('lti.getPlatformJwks:', typeof lti.getPlatformJwks);
+
 // JWKS endpoint (root)
 app.get('/.well-known/jwks.json', async (req, res) => {
   try {
