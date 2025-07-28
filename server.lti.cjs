@@ -37,14 +37,17 @@ app.use(session({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Database configuratie - Handmatige Sequelize instantiatie
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite',
-  logging: false
-});
-
-const db = new Database(sequelize);
+// Database configuratie - Volgens ltijs-sequelize documentatie
+const db = new Database(
+  'lti_database', // database name
+  null, // user (null for SQLite)
+  null, // password (null for SQLite)
+  {
+    dialect: 'sqlite',
+    storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite',
+    logging: false
+  }
+);
 
 // LTI setup
 const lti = new Provider();
