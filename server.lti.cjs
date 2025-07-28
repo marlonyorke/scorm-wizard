@@ -51,13 +51,14 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Database configuratie - Volgens ltijs documentatie
-// Database configuratie - Volgens ltijs documentatie
 logInfo('Initializing database configuration');
 logInfo(`Database URL: ${process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite'}`);
+logInfo(`LTI_DATABASE_URL from env: ${process.env.LTI_DATABASE_URL}`);
 
 let db, ltiDatabaseConfig;
 
 try {
+  // Eerst proberen we de database aan te maken
   db = new Database(
     'lti_database', // database name
     null, // user (null for SQLite)
@@ -65,17 +66,28 @@ try {
     {
       dialect: 'sqlite',
       storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite',
-      logging: false
+      logging: false,
+      retry: {
+        max: 3,
+        match: [
+          /SQLITE_BUSY/,
+          /SQLITE_LOCKED/,
+        ],
+        backoff: 'exponential' // or 'linear'
+      }
     }
   );
   
-  // LTI database configuration object - expliciete configuratie met url en plugin
+  logInfo('ltijs-sequelize Database created successfully');
+  
+  // Dan maken we de configuratie object voor lti.setup
+  // Volgens ltijs documentatie moet dit een object zijn met url en optioneel plugin
   ltiDatabaseConfig = {
-    plugin: db,
-    url: process.env.LTI_DATABASE_URL || 'sqlite://./lti_database.sqlite'
+    url: process.env.LTI_DATABASE_URL || 'sqlite://./lti_database.sqlite',
+    plugin: db
   };
   
-  logInfo('Database configuration initialized successfully');
+  logInfo(`ltiDatabaseConfig created: ${JSON.stringify(ltiDatabaseConfig)}`);
 } catch (error) {
   logError('Failed to initialize database configuration', error);
   process.exit(1);
@@ -84,7 +96,13 @@ try {
 // LTI setup
 // Gebruik de geïmporteerde lti (Provider class) direct
 logInfo('Starting LTI setup');
+
+// Check environment variables
+if (!process.env.LTI_KEY) {
+  logInfo('WARNING: LTI_KEY not set, using default - this is insecure for production');
+}
 logInfo(`LTI Key: ${process.env.LTI_KEY || 'your-lti-key-here'}`);
+logInfo(`LTI Database URL: ${process.env.LTI_DATABASE_URL || 'sqlite://./lti_database.sqlite'}`);
 logInfo(`NODE_ENV: ${process.env.NODE_ENV}`);
 
 try {
@@ -141,10 +159,11 @@ lti.onConnect((token, req, res) => {
 });
 
 // Error handling
-lti.onError((req, res, error) => {
-  console.error('LTI Error:', error);
+// Gebruik algemene error handling in plaats van lti.onError
+app.use((error, req, res, next) => {
+  logError('Unhandled error', error);
   res.status(500).json({ 
-    error: 'LTI launch failed',
+    error: 'Internal server error',
     message: error.message 
   });
 });
