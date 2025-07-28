@@ -9,6 +9,25 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// Debug logging
+console.log('=== LTI SERVER STARTUP DEBUG ===');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', PORT);
+console.log('LTI_KEY exists:', !!process.env.LTI_KEY);
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('LTI_DATABASE_URL:', process.env.LTI_DATABASE_URL);
+
+// Environment variable validation
+if (!process.env.LTI_KEY) {
+  console.warn('WARNING: LTI_KEY not set, using default');
+}
+
+if (!process.env.DATABASE_URL && !process.env.LTI_DATABASE_URL) {
+  console.warn('WARNING: No database URL found, using default sqlite file');
+}
+
+console.log('=== END DEBUG ===');
+
 // CORS configuratie
 app.use(cors({
   origin: ['http://localhost:3000', 'https://scorm-wizard.onrender.com'],
@@ -31,12 +50,31 @@ app.use(session({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Database configuratie - EXPLICIET dialect
-const db = new Database({
+// Database configuratie - Verbeterd voor Render
+console.log('=== DATABASE CONFIG DEBUG ===');
+console.log('Process env keys:', Object.keys(process.env).filter(key => key.includes('DATABASE') || key.includes('DB')));
+
+// Render-specifieke database configuratie
+const dbConfig = {
   dialect: 'sqlite',
-  storage: './database.sqlite',
-  logging: false
-});
+  storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './database.sqlite',
+  logging: process.env.NODE_ENV === 'development' ? console.log : false,
+  // Add explicit dialect configuration to prevent Sequelize errors
+  dialectOptions: {
+    // SQLite specific options
+  }
+};
+
+console.log('Database config:', dbConfig);
+
+let db;
+try {
+  db = new Database(dbConfig);
+  console.log('Database initialized successfully');
+} catch (dbError) {
+  console.error('Database initialization failed:', dbError);
+  process.exit(1);
+}
 
 // LTI setup
 const lti = Provider;
