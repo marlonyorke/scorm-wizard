@@ -55,9 +55,22 @@ console.log('=== DATABASE CONFIG DEBUG ===');
 console.log('Process env keys:', Object.keys(process.env).filter(key => key.includes('DATABASE') || key.includes('DB')));
 
 // Render-specifieke database configuratie
+// Fix voor 'file:' protocol dat niet werkt met Sequelize
+const getStoragePath = () => {
+  const url = process.env.DATABASE_URL || process.env.LTI_DATABASE_URL;
+  if (url) {
+    // Verwijder 'file:' prefix als die aanwezig is
+    if (url.startsWith('file:')) {
+      return url.substring(5); // Verwijder 'file:'
+    }
+    return url;
+  }
+  return './database.sqlite'; // Default
+};
+
 const dbConfig = {
   dialect: 'sqlite',
-  storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './database.sqlite',
+  storage: getStoragePath(),
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
   // Add explicit dialect configuration to prevent Sequelize errors
   dialectOptions: {
