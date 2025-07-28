@@ -87,7 +87,9 @@ try {
     plugin: db
   };
   
-  logInfo(`ltiDatabaseConfig created: ${JSON.stringify(ltiDatabaseConfig)}`);
+  // Log alleen de relevante velden van ltiDatabaseConfig om circulaire referenties te vermijden
+  logInfo(`ltiDatabaseConfig created with url: ${ltiDatabaseConfig.url}`);
+  logInfo(`ltiDatabaseConfig plugin type: ${ltiDatabaseConfig.plugin ? typeof ltiDatabaseConfig.plugin : 'undefined'}`);
 } catch (error) {
   logError('Failed to initialize database configuration', error);
   process.exit(1);
