@@ -31,11 +31,11 @@ app.use(session({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Database configuratie - CORRECTE SYNTAX
-const db = new Database({
+// Database configuratie
+const dbUrl = process.env.LTI_DATABASE_URL || 'sqlite://./database.sqlite';
+const db = new Database(dbUrl, {
   dialect: 'sqlite',
-  storage: './database.sqlite',
-  logging: false
+  logging: false,
 });
 
 // LTI setup
