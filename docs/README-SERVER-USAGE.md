@@ -117,6 +117,17 @@ Maak een `.env` bestand in de hoofdmap van het project met:
 OPENAI_API_KEY=jouw_api_sleutel_hier
 ```
 
+### Session database configuratie
+
+Voor productie gebruikt de server nu een SQLite sessiestore.
+Voeg de volgende variabelen toe aan je `.env`:
+
+```
+SESSION_DB_FILE=sessions.sqlite
+SESSION_DB_DIR=./db
+```
+Installeer ook de dependency `connect-sqlite3` met `npm install connect-sqlite3`.
+
 ### Kan ik de server in een Docker container draaien?
 
 Momenteel is Docker-ondersteuning niet geïmplementeerd. Je kunt de servers alleen lokaal draaien.

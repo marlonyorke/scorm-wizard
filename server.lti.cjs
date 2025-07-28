@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
 const cors = require('cors');
 const path = require('path');
 const { Provider } = require('ltijs');
@@ -35,7 +36,11 @@ app.use(cors({
 }));
 
 // Session configuratie
-app.use(session({
+const sessionOptions = {
+  store: new SQLiteStore({
+    db: process.env.SESSION_DB_FILE || 'sessions.sqlite',
+    dir: process.env.SESSION_DB_DIR || './db'
+  }),
   secret: process.env.LTI_KEY || 'your-lti-key-here',
   resave: false,
   saveUninitialized: false,
@@ -44,7 +49,9 @@ app.use(session({
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000
   }
-}));
+};
+
+app.use(session(sessionOptions));
 
 // Express middleware
 app.use(express.json({ limit: '50mb' }));
