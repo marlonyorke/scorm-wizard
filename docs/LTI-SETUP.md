@@ -18,6 +18,7 @@ LTI_DEPLOYMENT_ID=your-deployment-id
 MOODLE_URL=https://your-moodle-instance.com
 BASE_URL=https://your-ngrok-url.ngrok.io
 FRONTEND_URL=https://your-ngrok-url.ngrok.io
+LTI_DATABASE_PATH=./database.sqlite
 
 # Security
 JWT_SECRET=your-jwt-secret-key
@@ -78,6 +79,7 @@ LTI_DEPLOYMENT_ID=deployment-1
 MOODLE_URL=https://your-moodle-instance.com
 BASE_URL=https://your-ngrok-url.ngrok.io
 FRONTEND_URL=https://your-ngrok-url.ngrok.io
+LTI_DATABASE_PATH=./database.sqlite
 
 # Security
 JWT_SECRET=your-super-secret-jwt-key

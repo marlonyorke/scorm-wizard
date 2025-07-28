@@ -9,6 +9,8 @@ const LTI = require('ltijs');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
+const Sequelize = require('ltijs-sequelize');
 require('dotenv').config();
 
 const logger = {
@@ -29,7 +31,7 @@ const ltiConfig = {
 
 // Debug logging
 console.log('=== LTI DEBUG INFO ===');
-console.log('LTI_DATABASE_URL:', process.env.LTI_DATABASE_URL);
+console.log('LTI_DATABASE_PATH:', process.env.LTI_DATABASE_PATH);
 console.log('LTI_CLIENT_ID:', process.env.LTI_CLIENT_ID);
 console.log('MOODLE_URL:', process.env.MOODLE_URL);
 console.log('BASE_URL:', process.env.BASE_URL);
@@ -72,9 +74,16 @@ app.get('/.well-known/jwks.json', (req, res) => {
 });
 
 // Initialize LTI provider
-const dbConfig = { url: process.env.LTI_DATABASE_URL || ':memory:' };
+const dbConfig = {
+  dialect: 'sqlite',
+  storage: process.env.LTI_DATABASE_PATH || path.join('/tmp', 'lti.sqlite'),
+};
 const encryptionKey = process.env.LTI_ENCRYPTION_KEY || 'supersecret';
-const lti = LTI.Provider.setup(encryptionKey, dbConfig, ltiConfig);
+const lti = LTI.Provider.setup(
+  encryptionKey,
+  { plugin: Sequelize, pluginConfig: dbConfig },
+  ltiConfig
+);
 
 // Apply middleware
 app.use(helmet({
