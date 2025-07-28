@@ -145,7 +145,6 @@ console.log('lti Provider keys:', Object.keys(lti));
 console.log('lti Provider:', lti);
 
 // DEBUG: Log JWKS method detection
-console.log('lti.Platform:', lti.Platform);
 console.log('lti.getPlatformJwks:', typeof lti.getPlatformJwks);
 console.log('lti.getJwks:', typeof lti.getJwks);
 
@@ -153,12 +152,10 @@ console.log('lti.getJwks:', typeof lti.getJwks);
 app.get('/.well-known/jwks.json', async (req, res) => {
   try {
     let jwks;
-    if (typeof lti.getJwks === 'function') {
-      jwks = await lti.getJwks();
-    } else if (typeof lti.getPlatformJwks === 'function') {
+    if (typeof lti.getPlatformJwks === 'function') {
       jwks = await lti.getPlatformJwks();
-    } else if (typeof lti.Platform?.JWKS === 'function') {
-      jwks = await lti.Platform.JWKS();
+    } else if (typeof lti.getJwks === 'function') {
+      jwks = await lti.getJwks();
     } else {
       throw new Error('No JWKS method found on ltijs Provider');
     }
@@ -173,12 +170,10 @@ app.get('/.well-known/jwks.json', async (req, res) => {
 app.get('/lti/.well-known/jwks.json', async (req, res) => {
   try {
     let jwks;
-    if (typeof lti.getJwks === 'function') {
-      jwks = await lti.getJwks();
-    } else if (typeof lti.getPlatformJwks === 'function') {
+    if (typeof lti.getPlatformJwks === 'function') {
       jwks = await lti.getPlatformJwks();
-    } else if (typeof lti.Platform?.JWKS === 'function') {
-      jwks = await lti.Platform.JWKS();
+    } else if (typeof lti.getJwks === 'function') {
+      jwks = await lti.getJwks();
     } else {
       throw new Error('No JWKS method found on ltijs Provider');
     }
