@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
-const { Provider } = require('ltijs');
+const lti = require('ltijs').Provider; // Provider is al een instantie, geen constructor
 const Database = require('ltijs-sequelize');
 const SQLiteStore = require('connect-sqlite3')(session);
 const { Sequelize } = require('sequelize');
@@ -50,9 +50,7 @@ const db = new Database(
 );
 
 // LTI setup
-const lti = new Provider();
-
-// Setup LTI routes
+// Gebruik de geïmporteerde lti (Provider class) direct
 lti.setup(
   process.env.LTI_KEY || 'your-lti-key-here',
   db, // Gebruik database instantie
