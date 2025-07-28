@@ -2,7 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
-const lti = require('ltijs').Provider; // Provider is al een instantie, geen constructor
+const { Provider } = require('ltijs');
+let lti = null; // wordt straks geïnitialiseerd als class instance
 const Database = require('ltijs-sequelize');
 const SQLiteStore = require('connect-sqlite3')(session);
 const { Sequelize } = require('sequelize');
@@ -87,13 +88,24 @@ try {
     plugin: db
   };
   
-  // Log alleen de relevante velden van ltiDatabaseConfig om circulaire referenties te vermijden
   logInfo(`ltiDatabaseConfig created with url: ${ltiDatabaseConfig.url}`);
   logInfo(`ltiDatabaseConfig plugin type: ${ltiDatabaseConfig.plugin ? typeof ltiDatabaseConfig.plugin : 'undefined'}`);
 } catch (error) {
   logError('Failed to initialize database configuration', error);
   process.exit(1);
 }
+
+// === Class-based ltijs v5.x Provider setup ===
+lti = new Provider(
+  process.env.LTI_KEY || 'your-lti-key-here',
+  ltiDatabaseConfig,
+  {
+    appRoute: '/',
+    loginRoute: '/lti/auth',
+    keysetRoute: '/lti/.well-known/jwks.json',
+    // Je kunt hier meer opties toevoegen zoals cookie settings, CORS etc.
+  }
+);
 
 // LTI setup
 // Gebruik de geïmporteerde lti (Provider class) direct
@@ -107,28 +119,8 @@ logInfo(`LTI Key: ${process.env.LTI_KEY || 'your-lti-key-here'}`);
 logInfo(`LTI Database URL: ${process.env.LTI_DATABASE_URL || 'sqlite://./lti_database.sqlite'}`);
 logInfo(`NODE_ENV: ${process.env.NODE_ENV}`);
 
-try {
-  lti.setup(
-    process.env.LTI_KEY || 'your-lti-key-here',
-    ltiDatabaseConfig, // Gebruik correcte database configuratie
-    {
-      cors: {
-        enabled: true,
-        methods: ['GET', 'POST'],
-        origin: ['http://localhost:3000', 'https://scorm-wizard.onrender.com'],
-        credentials: true
-      },
-      cookies: {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
-      }
-    }
-  );
-  logInfo('LTI setup completed successfully');
-} catch (error) {
-  logError('Failed to setup LTI', error);
-  process.exit(1);
-}
+// Geen lti.setup() meer nodig in class-based v5.x
+logInfo('LTI Provider instance created (class-based v5.x)');
 
 // Health check endpoint
 app.get('/lti/health', (req, res) => {
@@ -146,14 +138,7 @@ console.log('lti Provider:', lti);
 // JWKS endpoint (root)
 app.get('/.well-known/jwks.json', async (req, res) => {
   try {
-    let jwks;
-    if (typeof lti.Platform?.JWKS === 'function') {
-      jwks = await lti.Platform.JWKS();
-    } else if (typeof lti.getPlatformJwks === 'function') {
-      jwks = await lti.getPlatformJwks();
-    } else {
-      throw new Error('No JWKS method found on ltijs Provider');
-    }
+    const jwks = await lti.Platform.JWKS();
     res.json(jwks);
   } catch (err) {
     logError('Failed to serve JWKS', err);
@@ -164,14 +149,7 @@ app.get('/.well-known/jwks.json', async (req, res) => {
 // JWKS endpoint (onder /lti)
 app.get('/lti/.well-known/jwks.json', async (req, res) => {
   try {
-    let jwks;
-    if (typeof lti.Platform?.JWKS === 'function') {
-      jwks = await lti.Platform.JWKS();
-    } else if (typeof lti.getPlatformJwks === 'function') {
-      jwks = await lti.getPlatformJwks();
-    } else {
-      throw new Error('No JWKS method found on ltijs Provider');
-    }
+    const jwks = await lti.Platform.JWKS();
     res.json(jwks);
   } catch (err) {
     logError('Failed to serve JWKS', err);
@@ -220,8 +198,8 @@ const server = app.listen(PORT, () => {
   logInfo(`Health check: http://localhost:${PORT}/lti/health`);
   logInfo(`JWKS endpoint: http://localhost:${PORT}/lti/.well-known/jwks.json`);
   
-  // Deploy LTI after server start
-  lti.deploy(app).then(() => {
+  // Deploy LTI after server start (class-based v5.x)
+  lti.deploy(app, { serverless: false }).then(() => {
     logInfo('LTI server deployed successfully');
   }).catch(error => {
     logError('Failed to deploy LTI server', error);
