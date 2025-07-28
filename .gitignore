@@ -44,3 +44,14 @@ dist-ssr
 *.temp
 ~*
 *.bak
+
+# Large binaries
+*.exe
+*.zip
+*.rar
+*.7z
+!node_modules/
+
+# Specific files to ignore
+ngrok.exe
+scormwizard.zip

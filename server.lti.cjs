@@ -5,6 +5,7 @@ const path = require('path');
 const { Provider } = require('ltijs');
 const Database = require('ltijs-sequelize');
 const SQLiteStore = require('connect-sqlite3')(session);
+const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 const app = express();
@@ -36,14 +37,14 @@ app.use(session({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Database configuratie
-const dbConfig = {
+// Database configuratie - Handmatige Sequelize instantiatie
+const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './database.sqlite',
+  storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite',
   logging: false
-};
+});
 
-const db = new Database(dbConfig);
+const db = new Database(sequelize);
 
 // LTI setup
 const lti = new Provider();
@@ -51,7 +52,7 @@ const lti = new Provider();
 // Setup LTI routes
 lti.setup(
   process.env.LTI_KEY || 'your-lti-key-here',
-  db,
+  db, // Gebruik database instantie
   {
     cors: {
       enabled: true,
