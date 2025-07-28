@@ -33,18 +33,13 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Database configuratie
 const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'scormwizard',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  port: process.env.DB_PORT || 3306,
-  dialect: process.env.DB_DIALECT || 'sqlite',
-  storage: process.env.DB_STORAGE || './database.sqlite'
+  dialect: 'sqlite',
+  storage: './database.sqlite'
 };
 
 // LTI configuratie
 const ltiConfig = {
-  plugin: new Database('database.sqlite'),
+  plugin: new Database(dbConfig),
   cors: {
     enabled: true,
     methods: ['GET', 'POST'],
