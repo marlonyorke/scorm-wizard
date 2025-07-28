@@ -139,6 +139,10 @@ app.get('/lti/health', (req, res) => {
   });
 });
 
+// DEBUG: Log lti Provider object keys and structure
+console.log('lti Provider keys:', Object.keys(lti));
+console.log('lti Provider:', lti);
+
 // JWKS endpoint (root)
 app.get('/.well-known/jwks.json', async (req, res) => {
   try {
