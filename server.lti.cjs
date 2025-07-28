@@ -8,6 +8,19 @@ const SQLiteStore = require('connect-sqlite3')(session);
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
+// Uitgebreide error logging
+const logError = (message, error) => {
+  console.error('=== LTI ERROR ===');
+  console.error(`Message: ${message}`);
+  console.error(`Error: ${error.message}`);
+  console.error(`Stack: ${error.stack}`);
+  console.error('=== END LTI ERROR ===');
+};
+
+const logInfo = (message) => {
+  console.log(`[INFO] ${new Date().toISOString()}: ${message}`);
+};
+
 const app = express();
 const PORT = process.env.PORT || 3002;
 
@@ -37,36 +50,65 @@ app.use(session({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Database configuratie - Volgens ltijs-sequelize documentatie
-const db = new Database(
-  'lti_database', // database name
-  null, // user (null for SQLite)
-  null, // password (null for SQLite)
-  {
-    dialect: 'sqlite',
-    storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite',
-    logging: false
-  }
-);
+// Database configuratie - Volgens ltijs documentatie
+// Database configuratie - Volgens ltijs documentatie
+logInfo('Initializing database configuration');
+logInfo(`Database URL: ${process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite'}`);
+
+let db, ltiDatabaseConfig;
+
+try {
+  db = new Database(
+    'lti_database', // database name
+    null, // user (null for SQLite)
+    null, // password (null for SQLite)
+    {
+      dialect: 'sqlite',
+      storage: process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite',
+      logging: false
+    }
+  );
+  
+  // LTI database configuration object - expliciete configuratie met url en plugin
+  ltiDatabaseConfig = {
+    plugin: db,
+    url: process.env.LTI_DATABASE_URL || 'sqlite://./lti_database.sqlite'
+  };
+  
+  logInfo('Database configuration initialized successfully');
+} catch (error) {
+  logError('Failed to initialize database configuration', error);
+  process.exit(1);
+}
 
 // LTI setup
 // Gebruik de geïmporteerde lti (Provider class) direct
-lti.setup(
-  process.env.LTI_KEY || 'your-lti-key-here',
-  db, // Gebruik database instantie
-  {
-    cors: {
-      enabled: true,
-      methods: ['GET', 'POST'],
-      origin: ['http://localhost:3000', 'https://scorm-wizard.onrender.com'],
-      credentials: true
-    },
-    cookies: {
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+logInfo('Starting LTI setup');
+logInfo(`LTI Key: ${process.env.LTI_KEY || 'your-lti-key-here'}`);
+logInfo(`NODE_ENV: ${process.env.NODE_ENV}`);
+
+try {
+  lti.setup(
+    process.env.LTI_KEY || 'your-lti-key-here',
+    ltiDatabaseConfig, // Gebruik correcte database configuratie
+    {
+      cors: {
+        enabled: true,
+        methods: ['GET', 'POST'],
+        origin: ['http://localhost:3000', 'https://scorm-wizard.onrender.com'],
+        credentials: true
+      },
+      cookies: {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+      }
     }
-  }
-);
+  );
+  logInfo('LTI setup completed successfully');
+} catch (error) {
+  logError('Failed to setup LTI', error);
+  process.exit(1);
+}
 
 // Health check endpoint
 app.get('/lti/health', (req, res) => {
@@ -115,13 +157,22 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-// Start server
-lti.deploy(app).then(() => {
-  console.log('LTI server deployed successfully');
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Start de server
+logInfo(`Attempting to start server on port ${PORT}`);
+
+const server = app.listen(PORT, () => {
+  logInfo(`SCORM Wizard LTI server draait op poort ${PORT}`);
+  logInfo(`Health check: http://localhost:${PORT}/lti/health`);
+  logInfo(`JWKS endpoint: http://localhost:${PORT}/lti/.well-known/jwks.json`);
+  
+  // Deploy LTI after server start
+  lti.deploy(app).then(() => {
+    logInfo('LTI server deployed successfully');
+  }).catch(error => {
+    logError('Failed to deploy LTI server', error);
+    process.exit(1);
   });
-}).catch(error => {
-  console.error('Failed to deploy LTI server:', error);
+}).on('error', (error) => {
+  logError('Failed to start server', error);
   process.exit(1);
 });
