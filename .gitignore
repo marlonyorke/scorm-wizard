@@ -55,3 +55,7 @@ dist-ssr
 # Specific files to ignore
 ngrok.exe
 scormwizard.zip
+
+# LTI RSA key files
+lti_private.pem
+lti_public.pem
