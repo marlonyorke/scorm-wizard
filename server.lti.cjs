@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
-const lti = require('ltijs').Provider; // Singleton instance, compatible with current ltijs package
+const { Provider } = require('ltijs');
 const Database = require('ltijs-sequelize');
 const SQLiteStore = require('connect-sqlite3')(session);
 const { Sequelize } = require('sequelize');
@@ -94,42 +94,27 @@ try {
   process.exit(1);
 }
 
-
 // LTI setup
-// Gebruik de geïmporteerde lti (Provider class) direct
-logInfo('Starting LTI setup');
+console.log('[INFO] Starting LTI setup');
+console.log('[INFO] LTI Key:', process.env.LTI_KEY);
+console.log('[INFO] LTI Database URL:', process.env.LTI_DATABASE_URL);
+console.log('[INFO] NODE_ENV:', process.env.NODE_ENV);
 
-// Check environment variables
-if (!process.env.LTI_KEY) {
-  logInfo('WARNING: LTI_KEY not set, using default - this is insecure for production');
-}
-logInfo(`LTI Key: ${process.env.LTI_KEY || 'your-lti-key-here'}`);
-logInfo(`LTI Database URL: ${process.env.LTI_DATABASE_URL || 'sqlite://./lti_database.sqlite'}`);
-logInfo(`NODE_ENV: ${process.env.NODE_ENV}`);
-
-// Singleton setup (compatible with current ltijs build)
-try {
-  lti.setup(
-    process.env.LTI_KEY || 'your-lti-key-here',
-    ltiDatabaseConfig, // Gebruik correcte database configuratie
-    {
-      cors: {
-        enabled: true,
-        methods: ['GET', 'POST'],
-        origin: ['http://localhost:3000', 'https://scorm-wizard.onrender.com'],
-        credentials: true
-      },
-      cookies: {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
-      }
-    }
-  );
-  logInfo('LTI setup completed successfully');
-} catch (error) {
-  logError('Failed to setup LTI', error);
-  process.exit(1);
-}
+const lti = new Provider(
+  process.env.LTI_KEY,
+  {
+    url: process.env.LTI_DATABASE_URL,
+    connection: { ssl: false }
+  },
+  {
+    staticPath: path.join(__dirname, 'public'),
+    cookies: {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'None'
+    },
+    dev: process.env.NODE_ENV !== 'production'
+  }
+);
 
 // Health check endpoint
 app.get('/lti/health', (req, res) => {
