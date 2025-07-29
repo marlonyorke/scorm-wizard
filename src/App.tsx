@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import DevTools from "@/components/dev/DevTools";
@@ -13,6 +13,20 @@ import ScormPage from "@/pages/scorm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 function App() {
+  useEffect(() => {
+    // Log all URL parameters for LTI debugging
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramsObj = Object.fromEntries(urlParams.entries());
+    console.log('[LTI DEBUG] URL Parameters:', paramsObj);
+    
+    // Check if LTI launch
+    if (urlParams.get('lti') === 'success') {
+      console.log('[LTI DEBUG] LTI Launch detected');
+    } else {
+      console.log('[LTI DEBUG] Regular access (not LTI)');
+    }
+  }, []);
+
   return (
     <ErrorBoundary componentName="SCORM Wizard App">
       <ThemeProvider>
