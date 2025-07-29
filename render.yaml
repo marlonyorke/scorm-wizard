@@ -3,8 +3,13 @@ services:
   - type: web
     name: scorm-wizard
     env: node
+    # Ensure all dependencies are installed
+    preBuildCommand: npm install
+    # Build the frontend
     buildCommand: npm run build
+    # Start the backend server
     startCommand: node server.lti.cjs
+    # Serve static files from dist directory
     staticPublishPath: ./dist
     envVars:
       - key: NODE_ENV
