@@ -1,0 +1,17 @@
+# Render deployment configuration for SCORM Wizard
+services:
+  - type: web
+    name: scorm-wizard
+    env: node
+    buildCommand: npm run build
+    startCommand: node server.lti.cjs
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    domains:
+      - scorm-wizard.onrender.com
+    healthCheckPath: /lti/health
+    autoDeploy: true
