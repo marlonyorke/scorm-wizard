@@ -52,6 +52,60 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Database configuratie - Volgens ltijs documentatie
+// *** DEBUG ROUTES - HIGHEST PRIORITY ***
+app.get('/lti-debug', (req, res) => {
+  // Respond with text instead of JSON to avoid middleware interference
+  res.setHeader('Content-Type', 'text/plain');
+  
+  try {
+    // Generate route info
+    const routes = app._router.stack
+      .filter(layer => layer.route)
+      .map(layer => ({
+        path: layer.route.path,
+        methods: Object.keys(layer.route.methods)
+      }));
+      
+    res.send(`LTI Debug Response: ${JSON.stringify({
+      status: 'ok',
+      message: 'LTI debug endpoint accessible',
+      routes: routes,
+      middleware: app._router.stack.length,
+      timestamp: new Date().toISOString()
+    }, null, 2)}`);
+  } catch (err) {
+    res.send(`Error generating debug info: ${err.message}\n${err.stack}`);
+  }
+});
+
+// Direct file serving route with highest priority
+app.get('/lti-test.html', (req, res) => {
+  const html = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>LTI Debug Test</title>
+    <style>body { font-family: Arial; }</style>
+  </head>
+  <body>
+    <h1>LTI Debug Test Page</h1>
+    <p>If you can see this page, direct routes are working.</p>
+    <p>Server time: ${new Date().toISOString()}</p>
+  </body>
+  </html>
+  `;
+  res.send(html);
+});
+
+// Manual LTI login endpoint - should have highest priority
+app.post('/lti/login', (req, res) => {
+  console.log('Manual LTI login route hit:', req.body);
+  res.setHeader('Content-Type', 'text/plain');
+  res.send(`Manual LTI login hit at ${new Date().toISOString()}\n\nReceived: ${JSON.stringify(req.body, null, 2)}`);
+});
+
+// *** END DEBUG ROUTES ***
+
 logInfo('Initializing database configuration');
 logInfo(`Database URL: ${process.env.DATABASE_URL || process.env.LTI_DATABASE_URL || './lti_database.sqlite'}`);
 logInfo(`LTI_DATABASE_URL from env: ${process.env.LTI_DATABASE_URL}`);
