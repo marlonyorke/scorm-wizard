@@ -97,13 +97,6 @@ app.get('/lti-test.html', (req, res) => {
   res.send(html);
 });
 
-// Manual LTI login endpoint - should have highest priority
-app.post('/lti/login', (req, res) => {
-  console.log('Manual LTI login route hit:', req.body);
-  res.setHeader('Content-Type', 'text/plain');
-  res.send(`Manual LTI login hit at ${new Date().toISOString()}\n\nReceived: ${JSON.stringify(req.body, null, 2)}`);
-});
-
 // *** END DEBUG ROUTES ***
 
 logInfo('Initializing database configuration');
