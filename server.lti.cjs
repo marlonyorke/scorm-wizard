@@ -102,10 +102,7 @@ console.log('[INFO] NODE_ENV:', process.env.NODE_ENV);
 
 const lti = new Provider(
   process.env.LTI_KEY,
-  {
-    url: process.env.LTI_DATABASE_URL,
-    connection: { ssl: false }
-  },
+  ltiDatabaseConfig,
   {
     staticPath: path.join(__dirname, 'public'),
     cookies: {
