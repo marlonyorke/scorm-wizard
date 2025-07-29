@@ -193,22 +193,21 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-// Start de server
-logInfo(`Attempting to start server on port ${PORT}`);
-
-const server = app.listen(PORT, () => {
-  logInfo(`SCORM Wizard LTI server draait op poort ${PORT}`);
-  logInfo(`Health check: http://localhost:${PORT}/lti/health`);
-  logInfo(`JWKS endpoint: http://localhost:${PORT}/lti/.well-known/jwks.json`);
-  
-  // Deploy LTI after server start (class-based v5.x)
-  lti.deploy(app, { serverless: false }).then(() => {
+// Start de server na LTI deploy
+lti.deploy(app, { serverless: false })
+  .then(() => {
     logInfo('LTI server deployed successfully');
-  }).catch(error => {
+    const server = app.listen(PORT, () => {
+      logInfo(`SCORM Wizard LTI server draait op poort ${PORT}`);
+      logInfo(`Health check: http://localhost:${PORT}/lti/health`);
+      logInfo(`JWKS endpoint: http://localhost:${PORT}/lti/.well-known/jwks.json`);
+    });
+    server.on('error', (error) => {
+      logError('Failed to start server', error);
+      process.exit(1);
+    });
+  })
+  .catch(error => {
     logError('Failed to deploy LTI server', error);
     process.exit(1);
   });
-}).on('error', (error) => {
-  logError('Failed to start server', error);
-  process.exit(1);
-});
