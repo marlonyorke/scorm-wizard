@@ -194,7 +194,7 @@ app.get('*', (req, res) => {
 });
 
 // Start de server na LTI deploy
-lti.deploy(app, { serverless: false })
+lti.deploy(app, { serverless: true })
   .then(() => {
     logInfo('LTI server deployed successfully');
     const server = app.listen(PORT, () => {
