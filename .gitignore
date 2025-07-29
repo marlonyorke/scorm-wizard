@@ -56,6 +56,4 @@ dist-ssr
 ngrok.exe
 scormwizard.zip
 
-# LTI RSA key files
-lti_private.pem
-lti_public.pem
+

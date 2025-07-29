@@ -146,31 +146,12 @@ app.get('/.well-known/jwks.json', async (req, res) => {
   }
 });
 
-// JWKS endpoint (onder /lti) - custom implementation
+// JWKS endpoint (onder /lti) - custom implementation using lti_public.pem
 app.get('/lti/.well-known/jwks.json', async (req, res) => {
   try {
     const pubKeyPem = fs.readFileSync(path.join(__dirname, 'lti_public.pem'), 'utf8');
     const key = await jose.JWK.asKey(pubKeyPem, 'pem');
     const jwks = { keys: [key.toJSON()] };
-    res.json(jwks);
-  } catch (err) {
-    logError('Failed to serve JWKS', err);
-    res.status(500).json({ error: 'Internal server error', message: err.message });
-  }
-});
-
-
-// JWKS endpoint (onder /lti)
-app.get('/lti/.well-known/jwks.json', async (req, res) => {
-  try {
-    let jwks;
-    if (typeof lti.getPlatformJwks === 'function') {
-      jwks = await lti.getPlatformJwks();
-    } else if (typeof lti.getJwks === 'function') {
-      jwks = await lti.getJwks();
-    } else {
-      throw new Error('No JWKS method found on ltijs Provider');
-    }
     res.json(jwks);
   } catch (err) {
     logError('Failed to serve JWKS', err);
