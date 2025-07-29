@@ -181,16 +181,8 @@ app.get('/lti/debug', (req, res) => {
   });
 });
 
-// Manual LTI login endpoint - om te testen of routes bereikbaar zijn
-app.post('/lti/login', (req, res) => {
-  console.log('Manual LTI login route hit:', req.body);
-  res.json({
-    status: 'manual_login_route', 
-    message: 'Dit is een handmatige LTI login route voor diagnostiek',
-    received: req.body,
-    timestamp: new Date().toISOString()
-  });
-});
+// Handmatige LTI login route is nu verwijderd om ltijs handler te laten werken
+// De LTI login route wordt nu afgehandeld door ltijs op '/lti/login'
 
 // Health check endpoint
 app.get('/lti/health', (req, res) => {
