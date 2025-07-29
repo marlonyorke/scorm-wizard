@@ -168,11 +168,21 @@ lti.onConnect((token, req, res) => {
     roles: token.roles
   });
   
+  // Create URL parameters with LTI data
+  const params = new URLSearchParams({
+    lti: 'success',
+    user: token.userInfo?.name || 'unknown',
+    email: token.userInfo?.email || '',
+    context: token.context?.title || 'unknown',
+    contextId: token.context?.id || '',
+    roles: token.roles?.join(',') || ''
+  });
+  
   const frontendUrl = process.env.NODE_ENV === 'production' 
     ? 'https://scorm-wizard.onrender.com' 
     : 'http://localhost:3000';
   
-  res.redirect(`${frontendUrl}/dashboard?lti=success`);
+  res.redirect(`${frontendUrl}/dashboard?${params.toString()}`);
 });
 
 // Error handling
