@@ -164,7 +164,14 @@ const lti = new Provider(
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'None'
     },
-    dev: process.env.NODE_ENV !== 'production'
+    dev: process.env.NODE_ENV !== 'production',
+    // Routes met /lti prefix voor Moodle compatibiliteit
+    appRoute: '/lti',
+    loginRoute: '/lti/login',
+    keysetRoute: '/lti/keys', 
+    // Routes met /lti prefix voor Moodle compatibiliteit
+    sessionTimeoutRoute: '/lti/sessionTimeout',
+    invalidTokenRoute: '/lti/invalidToken'
   }
 );
 
