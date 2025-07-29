@@ -114,6 +114,30 @@ const lti = new Provider(
   }
 );
 
+// Custom debug route voor LTI login - voor diagnostiek
+app.get('/lti/debug', (req, res) => {
+  res.json({ 
+    status: 'ok',
+    message: 'LTI debug endpoint is accessible',
+    routes: app._router.stack.filter(r => r.route).map(r => ({ 
+      path: r.route.path, 
+      methods: Object.keys(r.route.methods) 
+    })),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Manual LTI login endpoint - om te testen of routes bereikbaar zijn
+app.post('/lti/login', (req, res) => {
+  console.log('Manual LTI login route hit:', req.body);
+  res.json({
+    status: 'manual_login_route', 
+    message: 'Dit is een handmatige LTI login route voor diagnostiek',
+    received: req.body,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health check endpoint
 app.get('/lti/health', (req, res) => {
   res.json({ 
