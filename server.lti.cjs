@@ -195,18 +195,19 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Static files
-app.use(express.static(path.join(__dirname, 'dist')));
-
-// Catch all voor frontend
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
 // Start de server na LTI deploy
 lti.deploy(app, { serverless: true })
   .then(() => {
     logInfo('LTI server deployed successfully');
+    
+    // Static files (after LTI routes)
+    app.use(express.static(path.join(__dirname, 'dist')));
+    
+    // Catch all voor frontend (after LTI routes)
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    });
+    
     const server = app.listen(PORT, () => {
       logInfo(`SCORM Wizard LTI server draait op poort ${PORT}`);
       logInfo(`Health check: http://localhost:${PORT}/lti/health`);
