@@ -316,41 +316,8 @@ lti.deploy(app, { serverless: true })
     logInfo('LTI server deployed successfully');
     logInfo('LTI routes geregistreerd met prefixes. login: /lti/login -> /login');
     
-    // EXPLICIETE LTI LOGIN HANDLER
-    // Deze handler wordt aangeroepen na route rewrite van /lti/login naar /login
-    app.post('/login', async (req, res, next) => {
-      console.log('=== LTI LOGIN HANDLER AANGEROEPEN ===');
-      console.log('Request headers:', req.headers);
-      console.log('Request body keys:', Object.keys(req.body || {}));
-      console.log('Request URL:', req.url);
-      console.log('Original URL:', req.originalUrl);
-      
-      try {
-        console.log('Probeer lti.login aan te roepen...');
-        // Gebruik ltijs login methode direct
-        if (typeof lti.login === 'function') {
-          console.log('lti.login is beschikbaar, aanroepen...');
-          await lti.login(req, res, next);
-          console.log('lti.login succesvol aangeroepen');
-        } else {
-          console.error('lti.login is GEEN functie! Type:', typeof lti.login);
-          console.error('Beschikbare lti methoden:', Object.keys(lti));
-          throw new Error('lti.login methode niet beschikbaar');
-        }
-      } catch (err) {
-        console.error('=== LTI LOGIN ERROR ===');
-        console.error('Fout in LTI login handler:', err.message);
-        console.error('Fout stack:', err.stack);
-        console.error('Request details:', {
-          method: req.method,
-          url: req.url,
-          headers: req.headers,
-          bodyKeys: req.body ? Object.keys(req.body) : 'no body'
-        });
-        console.error('=== EINDE LTI LOGIN ERROR ===');
-        next(err);
-      }
-    });
+    // Geen expliciete login handler nodig - ltijs registreert zijn eigen routes
+    // De route rewrite middleware zorgt ervoor dat /lti/login requests correct worden verwerkt
     
     // Static files (after LTI routes)
     app.use(express.static(path.join(__dirname, 'dist')));
