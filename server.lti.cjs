@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
-const { Provider } = require('ltijs');
+const lti = require('ltijs').Provider;
 const Database = require('ltijs-sequelize');
 const SQLiteStore = require('connect-sqlite3')(session);
 const { Sequelize } = require('sequelize');
@@ -161,7 +161,7 @@ console.log('[INFO] LTI Key:', process.env.LTI_KEY);
 console.log('[INFO] LTI Database URL:', process.env.LTI_DATABASE_URL);
 console.log('[INFO] NODE_ENV:', process.env.NODE_ENV);
 
-const lti = new Provider(
+lti.setup(
   process.env.LTI_KEY,
   ltiDatabaseConfig,
   {
