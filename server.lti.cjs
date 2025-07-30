@@ -317,12 +317,35 @@ lti.deploy(app, { serverless: true })
     // EXPLICIETE LTI LOGIN HANDLER
     // Deze handler wordt aangeroepen na route rewrite van /lti/login naar /login
     app.post('/login', async (req, res, next) => {
-      console.log('EXPLICIETE LTI login handler aangeroepen');
+      console.log('=== LTI LOGIN HANDLER AANGEROEPEN ===');
+      console.log('Request headers:', req.headers);
+      console.log('Request body keys:', Object.keys(req.body || {}));
+      console.log('Request URL:', req.url);
+      console.log('Original URL:', req.originalUrl);
+      
       try {
+        console.log('Probeer lti.login aan te roepen...');
         // Gebruik ltijs login methode direct
-        await lti.login(req, res, next);
+        if (typeof lti.login === 'function') {
+          console.log('lti.login is beschikbaar, aanroepen...');
+          await lti.login(req, res, next);
+          console.log('lti.login succesvol aangeroepen');
+        } else {
+          console.error('lti.login is GEEN functie! Type:', typeof lti.login);
+          console.error('Beschikbare lti methoden:', Object.keys(lti));
+          throw new Error('lti.login methode niet beschikbaar');
+        }
       } catch (err) {
-        console.error('Fout in LTI login handler:', err);
+        console.error('=== LTI LOGIN ERROR ===');
+        console.error('Fout in LTI login handler:', err.message);
+        console.error('Fout stack:', err.stack);
+        console.error('Request details:', {
+          method: req.method,
+          url: req.url,
+          headers: req.headers,
+          bodyKeys: req.body ? Object.keys(req.body) : 'no body'
+        });
+        console.error('=== EINDE LTI LOGIN ERROR ===');
         next(err);
       }
     });
@@ -349,3 +372,34 @@ lti.deploy(app, { serverless: true })
     logError('Failed to deploy LTI server', error);
     process.exit(1);
   });
+
+// ALGEMENE EXPRESS ERROR HANDLER
+// Vangt alle onafgehandelde fouten op
+app.use((err, req, res, next) => {
+  console.error('=== UNHANDLED EXPRESS ERROR ===');
+  console.error('Error message:', err.message);
+  console.error('Error stack:', err.stack);
+  console.error('Request details:', {
+    method: req.method,
+    url: req.url,
+    originalUrl: req.originalUrl,
+    headers: req.headers,
+    bodyKeys: req.body ? Object.keys(req.body) : 'no body',
+    params: req.params,
+    query: req.query
+  });
+  console.error('Response details:', {
+    statusCode: res.statusCode,
+    headersSent: res.headersSent
+  });
+  console.error('=== EINDE UNHANDLED EXPRESS ERROR ===');
+  
+  // Stuur alleen een generieke foutmelding naar de client
+  if (!res.headersSent) {
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'Er is een fout opgetreden bij het verwerken van uw verzoek',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
