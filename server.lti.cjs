@@ -23,8 +23,8 @@ const logInfo = (message) => {
 };
 
 const app = express();
-// Gebruik dezelfde poort voor zowel Express als ltijs
-const PORT = process.env.PORT || 3000;
+// Gebruik poort 3002 als default (zoals Render configuratie)
+const PORT = process.env.PORT || 3002;
 console.log(`[PORT] Server zal draaien op poort: ${PORT}`);
 
 // Route rewrite middleware voor LTI login
@@ -317,6 +317,26 @@ lti.deploy(app, { serverless: true })
   .then(() => {
     logInfo('LTI server deployed successfully in serverless mode');
     logInfo('LTI routes geregistreerd. login: /lti/login -> /login via middleware');
+    
+    // DEBUG: Log alle geregistreerde routes
+    console.log('=== ALLE GEREGISTREERDE ROUTES ===');
+    app._router.stack.forEach((middleware, index) => {
+      if (middleware.route) {
+        console.log(`Route ${index}: ${Object.keys(middleware.route.methods)} ${middleware.route.path}`);
+      } else if (middleware.name === 'router') {
+        console.log(`Router ${index}: ${middleware.regexp}`);
+        if (middleware.handle && middleware.handle.stack) {
+          middleware.handle.stack.forEach((subRoute, subIndex) => {
+            if (subRoute.route) {
+              console.log(`  SubRoute ${subIndex}: ${Object.keys(subRoute.route.methods)} ${subRoute.route.path}`);
+            }
+          });
+        }
+      } else {
+        console.log(`Middleware ${index}: ${middleware.name || 'anonymous'}`);
+      }
+    });
+    console.log('=== EINDE ROUTES ===');
     
     // Static files (after LTI routes)
     app.use(express.static(path.join(__dirname, 'dist')));
