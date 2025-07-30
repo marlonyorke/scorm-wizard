@@ -23,7 +23,9 @@ const logInfo = (message) => {
 };
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+// Gebruik dezelfde poort voor zowel Express als ltijs
+const PORT = process.env.PORT || 3000;
+console.log(`[PORT] Server zal draaien op poort: ${PORT}`);
 
 // Route rewrite middleware voor LTI login
 // Herschrijft /lti/login naar /login zodat ltijs het kan verwerken
