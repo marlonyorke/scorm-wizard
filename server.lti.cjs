@@ -312,14 +312,11 @@ app.get('/dashboard-direct', (req, res) => {
   res.redirect(`${frontendUrl}/dashboard?bypass=true&test=true`);
 });
 
-// Start de server na LTI deploy
+// LTI deployment in serverless mode - GEEN eigen server starten
 lti.deploy(app, { serverless: true })
   .then(() => {
-    logInfo('LTI server deployed successfully');
-    logInfo('LTI routes geregistreerd met prefixes. login: /lti/login -> /login');
-    
-    // Geen expliciete login handler nodig - ltijs registreert zijn eigen routes
-    // De route rewrite middleware zorgt ervoor dat /lti/login requests correct worden verwerkt
+    logInfo('LTI server deployed successfully in serverless mode');
+    logInfo('LTI routes geregistreerd. login: /lti/login -> /login via middleware');
     
     // Static files (after LTI routes)
     app.use(express.static(path.join(__dirname, 'dist')));
@@ -329,13 +326,16 @@ lti.deploy(app, { serverless: true })
       res.sendFile(path.join(__dirname, 'dist', 'index.html'));
     });
     
+    // Start ALLEEN onze Express server op de juiste poort
     const server = app.listen(PORT, () => {
       logInfo(`SCORM Wizard LTI server draait op poort ${PORT}`);
       logInfo(`Health check: http://localhost:${PORT}/lti/health`);
       logInfo(`JWKS endpoint: http://localhost:${PORT}/lti/.well-known/jwks.json`);
+      logInfo(`LTI login endpoint: http://localhost:${PORT}/lti/login (via middleware -> /login)`);
     });
+    
     server.on('error', (error) => {
-      logError('Failed to start server', error);
+      logError('Failed to start Express server', error);
       process.exit(1);
     });
   })
