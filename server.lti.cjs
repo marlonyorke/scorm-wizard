@@ -171,15 +171,17 @@ const lti = new Provider(
       sameSite: 'None'
     },
     dev: process.env.NODE_ENV !== 'production',
-    // Routes met /lti prefix voor Moodle compatibiliteit
-    appRoute: '/lti',
-    loginRoute: '/lti/login',
-    keysetRoute: '/lti/keys', 
-    // Routes met /lti prefix voor Moodle compatibiliteit
-    sessionTimeoutRoute: '/lti/sessionTimeout',
-    invalidTokenRoute: '/lti/invalidToken'
+    serverless: true,
+    // Gebruik standaard routes zonder prefix - onze middleware handelt de rewrite af
+    appRoute: '/',
+    loginRoute: '/login',
+    keysetRoute: '/keys',
+    sessionTimeoutRoute: '/sessionTimeout',
+    invalidTokenRoute: '/invalidToken'
   }
 );
+
+console.log('[LTI CONFIG] ltijs geconfigureerd met standaard routes, middleware handelt /lti prefix af');
 
 // Custom debug route voor LTI login - voor diagnostiek
 app.get('/lti/debug', (req, res) => {
