@@ -265,10 +265,26 @@ app.use((error, req, res, next) => {
   });
 });
 
+// Herregistreer de LTI login route expliciet
+app.post('/lti/login', async (req, res, next) => {
+  console.log('LTI login route aanroep ontvangen, doorsturen naar ltijs');
+  // Doorsturen naar standaard ltijs login handler
+  try {
+    // De loginRoute uit ltijs configuratie halen en daarop routeren
+    const loginUrl = '/login'; // Hardcoded omdat ltijs dit standaard gebruikt
+    // Request doorsturen naar de juiste route handler
+    app._router.handle(Object.assign(req, { url: loginUrl, originalUrl: loginUrl }), res, next);
+  } catch (err) {
+    console.error('Fout bij doorsturen naar ltijs login handler:', err);
+    next(err);
+  }
+});
+
 // Start de server na LTI deploy
 lti.deploy(app, { serverless: true })
   .then(() => {
     logInfo('LTI server deployed successfully');
+    logInfo('LTI routes geregistreerd met prefixes. login: /lti/login -> /login');
     
     // Static files (after LTI routes)
     app.use(express.static(path.join(__dirname, 'dist')));
