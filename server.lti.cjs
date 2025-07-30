@@ -314,6 +314,19 @@ lti.deploy(app, { serverless: true })
     logInfo('LTI server deployed successfully');
     logInfo('LTI routes geregistreerd met prefixes. login: /lti/login -> /login');
     
+    // EXPLICIETE LTI LOGIN HANDLER
+    // Deze handler wordt aangeroepen na route rewrite van /lti/login naar /login
+    app.post('/login', async (req, res, next) => {
+      console.log('EXPLICIETE LTI login handler aangeroepen');
+      try {
+        // Gebruik ltijs login methode direct
+        await lti.login(req, res, next);
+      } catch (err) {
+        console.error('Fout in LTI login handler:', err);
+        next(err);
+      }
+    });
+    
     // Static files (after LTI routes)
     app.use(express.static(path.join(__dirname, 'dist')));
     
