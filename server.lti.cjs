@@ -25,6 +25,17 @@ const logInfo = (message) => {
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// Route rewrite middleware voor LTI login
+// Herschrijft /lti/login naar /login zodat ltijs het kan verwerken
+app.use((req, res, next) => {
+  if (req.path === '/lti/login' && req.method === 'POST') {
+    console.log('Route rewrite: /lti/login -> /login');
+    req.originalUrl = req.originalUrl.replace('/lti/login', '/login');
+    req.url = req.url.replace('/lti/login', '/login');
+  }
+  next();
+});
+
 // CORS configuratie
 app.use(cors({
   origin: ['http://localhost:3000', 'https://scorm-wizard.onrender.com'],
@@ -265,34 +276,36 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Directe LTI login handler implementatie
-app.post('/lti/login', async (req, res) => {
-  console.log('LTI login route direct afhandelen');
-  console.log('Ontvangen LTI login data:', req.body);
+// DIRECTE TOEGANG TOT APP/DASHBOARD
+app.all('/lti/login', (req, res) => {
+  // URL voor directe toegang tot frontend
+  const frontendUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://scorm-wizard.onrender.com' 
+    : 'http://localhost:3000';
   
-  try {
-    // Basis URL voor doorverwijzing naar frontend
-    const frontendUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://scorm-wizard.onrender.com' 
-      : 'http://localhost:3000';
-      
-    // LTI launch parameters direct doorgeven aan frontend
-    const params = new URLSearchParams({
-      lti: 'login_success',
-      message: 'LTI login direct afgehandeld',
-      platform: req.body.iss || 'unknown',
-      timestamp: new Date().toISOString()
-    });
-    
-    // Simuleer succesvolle login door redirect
-    res.redirect(`${frontendUrl}/dashboard?${params.toString()}`);
-  } catch (err) {
-    console.error('Fout bij direct afhandelen van LTI login:', err);
-    res.status(500).json({
-      error: 'Internal server error',
-      message: err.message
-    });
-  }
+  // Dummy test data voor de frontend
+  const params = new URLSearchParams({
+    bypass: 'true',
+    directAccess: 'true',
+    user: 'Test User',
+    context: 'Test Course',
+    roles: 'Instructor'
+  });
+  
+  console.log('Directe toegang tot dashboard/app');
+  // Direct naar de frontend/dashboard
+  res.redirect(`${frontendUrl}/dashboard?${params.toString()}`);
+});
+
+// Directe route naar dashboard zonder LTI (voor testen)
+app.get('/dashboard-direct', (req, res) => {
+  // URL voor directe toegang tot frontend
+  const frontendUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://scorm-wizard.onrender.com' 
+    : 'http://localhost:3000';
+  
+  console.log('Direct naar dashboard zonder LTI');
+  res.redirect(`${frontendUrl}/dashboard?bypass=true&test=true`);
 });
 
 // Start de server na LTI deploy
